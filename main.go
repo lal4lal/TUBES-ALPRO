@@ -2,9 +2,50 @@ package main
 
 import "fmt"
 
+const nmax int = 2048
+
+type pasien struct {
+}
+
+type dokter struct {
+}
+
+type dataPasien []pasien
+type dataDokter []dokter
+
+func menu() {
+	var option int
+	fmt.Println("==============Selamat Datang==============")
+	fmt.Println("1. login sebagai pasien")
+	fmt.Println("2. login sebagai guest")
+	fmt.Println("3. keluar")
+	fmt.Print("Masukkan pilihan anda: ")
+	fmt.Scan(option)
+	for option < 1 || option > 3 {
+		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
+		fmt.Print("Masukkan pilihan anda: ")
+		fmt.Scan(option)
+	}
+	if option == 1 {
+		login_pasien()
+	} else if option == 2 {
+		login_guest()
+	}
+}
+
+func signUp(patient *dataPasien) {
+	fmt.Println("==============Sign Up==============")
+	fmt.Println("Silahkan masukkan data yang dibutuhkan")
+}
+
+func login_pasien() {
+
+}
+
+func login_guest() {
+
+}
+
 func main() {
-	var a int
-	a = 10
-	fmt.Println(a)
-	fmt.Println("hello mars")
+
 }
