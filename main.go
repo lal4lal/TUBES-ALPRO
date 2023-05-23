@@ -6,6 +6,7 @@ const nmax int = 2048
 
 type pasien struct {
 	nama string
+	umur int
 }
 
 type dokter struct {
@@ -38,8 +39,10 @@ func signUp(patient *dataPasien, n *int) {
 
 	fmt.Println("==============Sign Up==============")
 	fmt.Println("Silahkan masukkan data yang dibutuhkan")
-	fmt.Println("Nama Lengkap: ")
+	fmt.Print("Nama Lengkap: ")
 	fmt.Scan(&patient[*n].nama)
+	fmt.Print("Umur: ")
+	fmt.Scan(&patient[*n].umur)
 }
 
 func login_pasien() {
