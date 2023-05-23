@@ -5,13 +5,14 @@ import "fmt"
 const nmax int = 2048
 
 type pasien struct {
+	nama string
 }
 
 type dokter struct {
 }
 
-type dataPasien []pasien
-type dataDokter []dokter
+type dataPasien [nmax]pasien
+type dataDokter [nmax]dokter
 
 func menu() {
 	var option int
@@ -33,9 +34,12 @@ func menu() {
 	}
 }
 
-func signUp(patient *dataPasien) {
+func signUp(patient *dataPasien, n *int) {
+
 	fmt.Println("==============Sign Up==============")
 	fmt.Println("Silahkan masukkan data yang dibutuhkan")
+	fmt.Println("Nama Lengkap: ")
+	fmt.Scan(&patient[*n].nama)
 }
 
 func login_pasien() {
