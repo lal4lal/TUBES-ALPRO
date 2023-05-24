@@ -5,8 +5,9 @@ import "fmt"
 const nmax int = 2048
 
 type pasien struct {
-	nama string
-	umur int
+	nama   string
+	umur   int
+	konsul [nmax]string
 }
 
 type dokter struct {
