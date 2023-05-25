@@ -36,26 +36,23 @@ type tag struct {
 type dataPasien [nmax]pasien
 type dataDokter [nmax]dokter
 
-func menu() {
+func menu(patient dataPasien) {
 	var option int
 	fmt.Println("==============Selamat Datang==============")
 	fmt.Println("1. login sebagai pasien")
 	fmt.Println("2. login sebagai dokter")
-	fmt.Println("3. login sebagai guest")
-	fmt.Println("4. keluar")
+	fmt.Println("0. keluar")
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
-	for option < 1 || option > 3 {
+	for option < 1 || option > 2 {
 		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
 		fmt.Print("Masukkan pilihan anda: ")
 		fmt.Scan(&option)
 	}
 	if option == 1 {
-		login_pasien()
+		login_pasien(patient)
 	} else if option == 2 {
 		login_dokter()
-	} else if option == 3 {
-		login_guest()
 	}
 }
 
@@ -70,17 +67,31 @@ func signUp(patient *dataPasien, n *int) {
 	fmt.Print("Password:")
 	fmt.Scan(&patient[*n].password)
 	*n++
+	fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
+	login_pasien(*patient)
 }
 
-func login_pasien() {
+func login_pasien(patient dataPasien) {
+	var option int
+	var n int
+	fmt.Println("==============Login==============")
+	fmt.Println("1. Sudah mendaftar sebagai pasien")
+	fmt.Println("2. Belum terdaftar sebagai pasien")
+	fmt.Println("3. Masuk sebagai tamu")
+	fmt.Print("Masukkan pilihan anda: ")
+	fmt.Scan(&option)
+	for option < 1 || option > 3 {
+		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
+		fmt.Println("Masukkan pilihan anda: ")
+		fmt.Scan(&option)
+	}
+	if option == 2 {
+		signUp(&patient, &n)
+	}
 
 }
 
 func login_dokter() {
-
-}
-
-func login_guest() {
 
 }
 
