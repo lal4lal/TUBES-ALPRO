@@ -69,7 +69,7 @@ func signUp(patient *dataPasien, n *int) {
 	fmt.Print("Password:")
 	fmt.Scan(&patient[*n].password)
 	*n++
-	fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
+	// fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
 	login_pasien(*patient)
 }
 
@@ -98,5 +98,6 @@ func login_dokter() {
 }
 
 func main() {
+	fmt.Println("halooo")
 
 }
