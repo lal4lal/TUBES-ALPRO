@@ -94,7 +94,7 @@ func login_pasien(patient dataPasien) {
 }
 
 func login_dokter() {
-	dito
+	fmt.Println("coba aja ini mah")
 }
 
 func main() {
