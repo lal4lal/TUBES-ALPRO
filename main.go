@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const nmax int = 2048
 
@@ -42,11 +44,11 @@ func menu() {
 	fmt.Println("3. login sebagai guest")
 	fmt.Println("4. keluar")
 	fmt.Print("Masukkan pilihan anda: ")
-	fmt.Scan(option)
+	fmt.Scan(&option)
 	for option < 1 || option > 3 {
 		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
 		fmt.Print("Masukkan pilihan anda: ")
-		fmt.Scan(option)
+		fmt.Scan(&option)
 	}
 	if option == 1 {
 		login_pasien()
@@ -65,6 +67,9 @@ func signUp(patient *dataPasien, n *int) {
 	fmt.Scan(&patient[*n].nama)
 	fmt.Print("Umur: ")
 	fmt.Scan(&patient[*n].umur)
+	fmt.Print("Password:")
+	fmt.Scan(&patient[*n].password)
+	*n++
 }
 
 func login_pasien() {
