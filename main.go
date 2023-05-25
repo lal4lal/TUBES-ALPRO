@@ -92,7 +92,7 @@ func login_pasien(patient dataPasien) {
 }
 
 func login_dokter() {
-
+	dito
 }
 
 func main() {
