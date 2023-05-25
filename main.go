@@ -102,5 +102,6 @@ func main() {
 	fmt.Println("halooo")
 	fmt.Println("besok kalkulus anjing")
 	fmt.Println("susah bgst")
+	fmt.Println("Iyaa cokkk")
 
 }
