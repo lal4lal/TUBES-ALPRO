@@ -99,5 +99,6 @@ func login_dokter() {
 
 func main() {
 	fmt.Println("halooo")
+	fmt.Println("besok kalkulus anjing")
 
 }
