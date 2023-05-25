@@ -98,5 +98,6 @@ func login_dokter() {
 }
 
 func main() {
+	fmt.Println("andito")
 
 }
