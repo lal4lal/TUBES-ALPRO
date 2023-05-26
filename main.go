@@ -59,8 +59,28 @@ func menu(patient dataPasien) {
 		login_dokter()
 	}
 }
-func menuguest() {
-	fmt.Println("guest")
+func menuguest(patient dataPasien) {
+	var option int
+	fmt.Println("*================Welcome==================*")
+	fmt.Println("|      1. Lihat Konsultasi Pasien         |")
+	fmt.Println("|      2. Cari Konsultasi Pasien          |")
+	fmt.Println("|      0. Kembali ke menu                 |")
+	fmt.Println("*=========================================*")
+	fmt.Print("Masukkan pilihan anda: ")
+	fmt.Scan(&option)
+	for option != 1 && option != 0 && option != 2 {
+		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
+		fmt.Println("Masukkan pilihan anda: ")
+		fmt.Scan(&option)
+	}
+	if option == 0 {
+		menuPasien(&patient)
+	} else if option == 1 {
+		sortingKonsultasiTag()
+	} else if option == 2 {
+		searchKonsultasiTag()
+	}
+
 }
 
 func signUp(patient *dataPasien) {
@@ -96,7 +116,7 @@ func menuPasien(patient *dataPasien) {
 	if option == 2 {
 		signUp(patient)
 	} else if option == 3 {
-		menuguest()
+		menuguest(*patient)
 	} else if option == 1 {
 		patient.infoPasien[0].nama = "dosen"
 		patient.infoPasien[0].password = "alpro"
@@ -133,11 +153,47 @@ func login_pasien(patient *dataPasien) {
 			fmt.Scan(&pass)
 		}
 	}
-	homePasien()
+	homePasien(patient)
 }
 
-func homePasien() {
-	fmt.Println("sukses")
+func homePasien(patient *dataPasien) {
+	var i, option int
+	fmt.Println("")
+	fmt.Println("Selamat Datang", patient.infoPasien[i].nama)
+	fmt.Println("-----------------------------------")
+	fmt.Println(" 1. Konsultasi pada dokter! ")
+	fmt.Println(" 2. Tanggapi Konsultasi     ")
+	fmt.Println(" 0. Keluar dari Akun        ")
+	fmt.Print("Masukkan pilihan anda: ")
+	fmt.Scan(&option)
+	for option != 1 && option != 0 && option != 2 {
+		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
+		fmt.Println("Masukkan pilihan anda: ")
+		fmt.Scan(&option)
+	}
+	if option == 0 {
+		menuPasien(patient)
+	} else if option == 1 {
+		addKonsultasiPasien()
+	} else if option == 2 {
+		replyKonsultasiPasien()
+	}
+}
+
+func searchKonsultasiTag() {
+	fmt.Println("searchKonsultasiTag")
+}
+
+func sortingKonsultasiTag() {
+	fmt.Println("sorting")
+}
+
+func addKonsultasiPasien() {
+
+}
+
+func replyKonsultasiPasien() {
+
 }
 
 func login_dokter() {
