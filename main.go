@@ -124,5 +124,7 @@ func login_dokter() {
 }
 
 func main() {
+	var patient dataPasien
+	menu(patient)
 
 }
