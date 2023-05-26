@@ -36,8 +36,10 @@ type tag struct {
 type dataPasien [nmax]pasien
 type dataDokter [nmax]dokter
 
-func menu(patient dataPasien) {
+func menu() {
+	var patient dataPasien
 	var option int
+
 	fmt.Println("==============Selamat Datang==============")
 	fmt.Println("1. login sebagai pasien")
 	fmt.Println("2. login sebagai dokter")
@@ -97,9 +99,6 @@ func login_dokter() {
 }
 
 func main() {
-	fmt.Println("halooo")
-	fmt.Println("besok kalkulus anjing")
-	fmt.Println("susah bgst")
-	fmt.Println("Iyaa cokkk")
+	menu()
 
 }
