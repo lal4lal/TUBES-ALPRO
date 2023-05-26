@@ -90,16 +90,16 @@ func login_pasien(patient dataPasien) {
 	if option == 2 {
 		signUp(&patient, &n)
 	}
-
 }
 
 func login_dokter() {
-	fmt.Println("coba aja ini mah")
-	fmt.Println("P")
+
 }
 
 func main() {
-	var data dataPasien
-	menu(data)
+	fmt.Println("halooo")
+	fmt.Println("besok kalkulus anjing")
+	fmt.Println("susah bgst")
+	fmt.Println("Iyaa cokkk")
 
 }
