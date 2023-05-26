@@ -52,7 +52,7 @@ func menu() {
 		fmt.Scan(&option)
 	}
 	if option == 1 {
-		login_pasien(patient)
+		menu_pasien(patient)
 	} else if option == 2 {
 		login_dokter()
 	} else if option == 0 {
@@ -60,7 +60,7 @@ func menu() {
 	}
 }
 
-func signUp(patient *dataPasien, n *int) {
+func signUpPasien(patient *dataPasien, n *int) {
 
 	fmt.Println("==============Sign Up==============")
 	fmt.Println("Silahkan masukkan data yang dibutuhkan")
@@ -72,10 +72,10 @@ func signUp(patient *dataPasien, n *int) {
 	fmt.Scan(&patient[*n].password)
 	*n++
 	fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
-	login_pasien(*patient)
+	menu_pasien(*patient)
 }
 
-func login_pasien(patient dataPasien) {
+func menu_pasien(patient dataPasien) {
 	var option int
 	var n int
 	fmt.Println("==============Login==============")
@@ -90,7 +90,7 @@ func login_pasien(patient dataPasien) {
 		fmt.Scan(&option)
 	}
 	if option == 2 {
-		signUp(&patient, &n)
+		signUpPasien(&patient, &n)
 	}
 }
 
