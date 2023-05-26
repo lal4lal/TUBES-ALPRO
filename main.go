@@ -51,13 +51,29 @@ func menu(patient dataPasien) {
 		fmt.Scan(&option)
 	}
 	if option == 1 {
-		menu_pasien(patient)
+		login_pasien(patient)
 	} else if option == 2 {
-
+		login_dokter()
 	}
 }
 
-func menu_pasien(patient dataPasien) {
+func signUp(patient *dataPasien, n *int) {
+
+	fmt.Println("*==================Sign Up===================*")
+	fmt.Println("|   Silahkan masukkan data yang dibutuhkan   |")
+	fmt.Println("*============================================*")
+	fmt.Print("Username: ")
+	fmt.Scan(&patient[*n].nama)
+	fmt.Print("Umur: ")
+	fmt.Scan(&patient[*n].umur)
+	fmt.Print("Password: ")
+	fmt.Scan(&patient[*n].password)
+	*n++
+	fmt.Printf("---Anda akan diarahkan kembali menuju login--- \n")
+	login_pasien(*patient)
+}
+
+func menuPasien(patient dataPasien) {
 	var option int
 	var n int
 	fmt.Println("*==================Login==================*")
@@ -73,50 +89,16 @@ func menu_pasien(patient dataPasien) {
 		fmt.Scan(&option)
 	}
 	if option == 2 {
-		signUpPasien(&patient, &n)
-	}
-}
+		signUp(&patient, &n)
+	} else if option == 3 {
 
-func mainmenu_pasien() {
-	fmt.Println("yeyy")
-}
-
-func menu_tamu() {
-	fmt.Println("ini menu tamu")
-}
-
-func signUpPasien(patient *dataPasien, n *int) {
-
-	fmt.Println("==============Sign Up==============")
-	fmt.Println("Silahkan masukkan data yang dibutuhkan")
-	fmt.Print("Nama Lengkap: ")
-	fmt.Scan(&patient[*n].nama)
-	fmt.Print("Umur: ")
-	fmt.Scan(&patient[*n].umur)
-	fmt.Print("Password:")
-	fmt.Scan(&patient[*n].password)
-	*n++
-	fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
-	if login_pasien(*patient, *n) {
-		mainmenu_pasien()
 	} else {
-		fmt.Println("data tidak ditemukan")
-		login_pasien(*patient, *n)
+		loginPasien(patient)
 	}
 }
 
-func login_pasien(patient dataPasien, n int) bool {
-	var nama, pass string
-	fmt.Println("--- Login ---")
-	fmt.Println("Input data anda :")
-	fmt.Print("username :")
-	fmt.Scan(&nama)
-	fmt.Print("Password :")
-	fmt.Scan(&pass)
-	if patient[n].nama == nama && patient[n].password == pass || patient[n].nama == "dosen" {
-		return true
-	}
-	return false
+func loginPasien(patient dataPasien) {
+
 }
 
 func login_dokter() {
@@ -124,7 +106,5 @@ func login_dokter() {
 }
 
 func main() {
-	var patient dataPasien
-	menu(patient)
 
 }
