@@ -59,26 +59,28 @@ func menu(patient dataPasien) {
 
 func signUp(patient *dataPasien, n *int) {
 
-	fmt.Println("==============Sign Up==============")
-	fmt.Println("Silahkan masukkan data yang dibutuhkan")
+	fmt.Println("*==================Sign Up===================*")
+	fmt.Println("|   Silahkan masukkan data yang dibutuhkan   |")
+	fmt.Println("*============================================*")
 	fmt.Print("Username: ")
-	fmt.Scanln(&patient[*n].nama)
+	fmt.Scan(&patient[*n].nama)
 	fmt.Print("Umur: ")
-	fmt.Scanln(&patient[*n].umur)
+	fmt.Scan(&patient[*n].umur)
 	fmt.Print("Password: ")
-	fmt.Scanln(&patient[*n].password)
+	fmt.Scan(&patient[*n].password)
 	*n++
-	fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
+	fmt.Printf("---Anda akan diarahkan kembali menuju login--- \n")
 	login_pasien(*patient)
 }
 
 func login_pasien(patient dataPasien) {
 	var option int
 	var n int
-	fmt.Println("==============Login==============")
-	fmt.Println("1. Sudah mendaftar sebagai pasien")
-	fmt.Println("2. Belum terdaftar sebagai pasien")
-	fmt.Println("3. Masuk sebagai tamu")
+	fmt.Println("*==================Login==================*")
+	fmt.Println("|    1. Sudah mendaftar sebagai pasien    |")
+	fmt.Println("|    2. Belum terdaftar sebagai pasien    |")
+	fmt.Println("|    3. Masuk sebagai tamu                |")
+	fmt.Println("*=========================================*")
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
 	for option < 1 || option > 3 {
