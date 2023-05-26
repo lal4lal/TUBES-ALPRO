@@ -77,7 +77,7 @@ func signUp(patient *dataPasien) {
 	fmt.Scan(&patient.infoPasien[patient.n].password)
 	patient.n++
 	fmt.Printf("---Anda akan diarahkan kembali menuju login--- \n")
-	menuPasien(*patient)
+	login_pasien(*patient)
 }
 
 func menuPasien(patient dataPasien) {
