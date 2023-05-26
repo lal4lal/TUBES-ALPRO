@@ -51,10 +51,14 @@ func menu(patient dataPasien) {
 		fmt.Scan(&option)
 	}
 	if option == 1 {
-		login_pasien(patient)
+		menuPasien(patient)
 	} else if option == 2 {
 		login_dokter()
 	}
+}
+
+func menuguest() {
+	fmt.Println("guest")
 }
 
 func signUp(patient *dataPasien, n *int) {
@@ -70,7 +74,12 @@ func signUp(patient *dataPasien, n *int) {
 	fmt.Scan(&patient[*n].password)
 	*n++
 	fmt.Printf("---Anda akan diarahkan kembali menuju login--- \n")
-	login_pasien(*patient)
+	if login_pasien(*patient, *n) {
+		mainmenu_pasien()
+	} else {
+		fmt.Println("data tidak ditemukan")
+		login_pasien(*patient, *n)
+	}
 }
 
 func menuPasien(patient dataPasien) {
@@ -91,14 +100,28 @@ func menuPasien(patient dataPasien) {
 	if option == 2 {
 		signUp(&patient, &n)
 	} else if option == 3 {
-
-	} else {
-		loginPasien(patient)
+		menuguest()
+	} else if option == 1 {
+		login_pasien(patient, n)
 	}
 }
 
-func loginPasien(patient dataPasien) {
+func mainmenu_pasien() {
+	fmt.Println("sukses")
+}
 
+func login_pasien(patient dataPasien, n int) bool {
+	var nama, pass string
+	fmt.Println("*==================Login==================*")
+	fmt.Println("Input data anda :")
+	fmt.Print("username :")
+	fmt.Scan(&nama)
+	fmt.Print("Password :")
+	fmt.Scan(&pass)
+	if (patient[n].nama == nama || patient[n].nama == "dosen") && patient[n].password == pass {
+		return true
+	}
+	return false
 }
 
 func login_dokter() {
@@ -106,5 +129,7 @@ func login_dokter() {
 }
 
 func main() {
+	var pasien dataPasien
+	menu(pasien)
 
 }
