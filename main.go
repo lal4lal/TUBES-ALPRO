@@ -44,7 +44,7 @@ func menu(patient dataPasien) {
 	fmt.Println("0. keluar")
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
-	for option < 1 || option > 2 {
+	for option != 1 && option != 2 && option != 0 {
 		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
 		fmt.Print("Masukkan pilihan anda: ")
 		fmt.Scan(&option)
@@ -53,6 +53,8 @@ func menu(patient dataPasien) {
 		login_pasien(patient)
 	} else if option == 2 {
 		login_dokter()
+	} else if option == 0 {
+		fmt.Println("Keluar dari aplikasi...")
 	}
 }
 
@@ -67,7 +69,7 @@ func signUp(patient *dataPasien, n *int) {
 	fmt.Print("Password:")
 	fmt.Scan(&patient[*n].password)
 	*n++
-	// fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
+	fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
 	login_pasien(*patient)
 }
 
