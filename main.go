@@ -36,28 +36,40 @@ type tag struct {
 type dataPasien [nmax]pasien
 type dataDokter [nmax]dokter
 
-func menu() {
-	var patient dataPasien
+func menu(patient dataPasien) {
 	var option int
-
-	fmt.Println("==============Selamat Datang==============")
-	fmt.Println("1. Sebagai pasien")
-	fmt.Println("2. Sebagai dokter")
-	fmt.Println("0. keluar")
+	fmt.Println("*=============Selamat Datang=============*")
+	fmt.Println("|    1. login sebagai pasien             |")
+	fmt.Println("|    2. login sebagai dokter             |")
+	fmt.Println("|    0. keluar                           |")
+	fmt.Println("*========================================*")
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
-	for option != 1 && option != 2 && option != 0 {
+	for option < 1 || option > 2 {
 		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
 		fmt.Print("Masukkan pilihan anda: ")
 		fmt.Scan(&option)
 	}
 	if option == 1 {
-		menu_pasien(patient)
+		login_pasien(patient)
 	} else if option == 2 {
 		login_dokter()
-	} else if option == 0 {
-		fmt.Println("Keluar dari aplikasi...")
 	}
+}
+
+func signUpPasien(patient *dataPasien, n *int) {
+
+	fmt.Println("==============Sign Up==============")
+	fmt.Println("Silahkan masukkan data yang dibutuhkan")
+	fmt.Print("Nama Lengkap: ")
+	fmt.Scan(&patient[*n].nama)
+	fmt.Print("Umur: ")
+	fmt.Scan(&patient[*n].umur)
+	fmt.Print("Password:")
+	fmt.Scan(&patient[*n].password)
+	*n++
+	fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
+	menu_pasien(*patient)
 }
 
 func menu_pasien(patient dataPasien) {
@@ -76,15 +88,6 @@ func menu_pasien(patient dataPasien) {
 	}
 	if option == 2 {
 		signUpPasien(&patient, &n)
-		fmt.Println(patient[n].nama)
-	} else if option == 1 {
-		/* biar mudahin ibunya, kita assign aja value dititik ini seakan udah daftar */
-		patient[n].nama = "dosen"
-		patient[n].umur = 30
-		patient[n].password = "alpro"
-		login_pasien(patient, n)
-	} else if option == 3 {
-		menu_tamu()
 	}
 }
 
@@ -135,6 +138,5 @@ func login_dokter() {
 }
 
 func main() {
-	menu()
 
 }
