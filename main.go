@@ -90,7 +90,6 @@ func login_pasien(patient dataPasien) {
 	if option == 2 {
 		signUp(&patient, &n)
 	}
-
 }
 
 func login_dokter() {
