@@ -59,7 +59,6 @@ func menu(patient dataPasien) {
 		login_dokter()
 	}
 }
-
 func menuguest() {
 	fmt.Println("guest")
 }
@@ -82,7 +81,7 @@ func signUp(patient *dataPasien) {
 
 func menuPasien(patient dataPasien) {
 	var option int
-	fmt.Println("*==================Login==================*")
+	fmt.Println("*================Welcome==================*")
 	fmt.Println("|    1. Sudah mendaftar sebagai pasien    |")
 	fmt.Println("|    2. Belum terdaftar sebagai pasien    |")
 	fmt.Println("|    3. Masuk sebagai tamu                |")
