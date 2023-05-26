@@ -60,21 +60,6 @@ func menu() {
 	}
 }
 
-func signUpPasien(patient *dataPasien, n *int) {
-
-	fmt.Println("==============Sign Up==============")
-	fmt.Println("Silahkan masukkan data yang dibutuhkan")
-	fmt.Print("Nama Lengkap: ")
-	fmt.Scan(&patient[*n].nama)
-	fmt.Print("Umur: ")
-	fmt.Scan(&patient[*n].umur)
-	fmt.Print("Password:")
-	fmt.Scan(&patient[*n].password)
-	*n++
-	fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
-	menu_pasien(*patient)
-}
-
 func menu_pasien(patient dataPasien) {
 	var option int
 	var n int
@@ -91,7 +76,58 @@ func menu_pasien(patient dataPasien) {
 	}
 	if option == 2 {
 		signUpPasien(&patient, &n)
+		fmt.Println(patient[n].nama)
+	} else if option == 1 {
+		/* biar mudahin ibunya, kita assign aja value dititik ini seakan udah daftar */
+		patient[n].nama = "dosen"
+		patient[n].umur = 30
+		patient[n].password = "alpro"
+		login_pasien(patient, n)
+	} else if option == 3 {
+		menu_tamu()
 	}
+}
+
+func mainmenu_pasien() {
+	fmt.Println("yeyy")
+}
+
+func menu_tamu() {
+	fmt.Println("ini menu tamu")
+}
+
+func signUpPasien(patient *dataPasien, n *int) {
+
+	fmt.Println("==============Sign Up==============")
+	fmt.Println("Silahkan masukkan data yang dibutuhkan")
+	fmt.Print("Nama Lengkap: ")
+	fmt.Scan(&patient[*n].nama)
+	fmt.Print("Umur: ")
+	fmt.Scan(&patient[*n].umur)
+	fmt.Print("Password:")
+	fmt.Scan(&patient[*n].password)
+	*n++
+	// fmt.Println("---Anda akan diarahkan kembali menuju login--- \n")
+	// if login_pasien(*patient, *n) {
+	// 	mainmenu_pasien()
+	// } else {
+	// 	fmt.Println("data tidak ditemukan")
+	// 	login_pasien(*patient, *n)
+	// }
+}
+
+func login_pasien(patient dataPasien, n int) bool {
+	var nama, pass string
+	fmt.Println("--- Login ---")
+	fmt.Println("Input data anda :")
+	fmt.Print("username :")
+	fmt.Scan(&nama)
+	fmt.Print("Password :")
+	fmt.Scan(&pass)
+	if patient[n].nama == nama && patient[n].password == pass || patient[n].nama == "dosen" {
+		return true
+	}
+	return false
 }
 
 func login_dokter() {
