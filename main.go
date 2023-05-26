@@ -93,14 +93,9 @@ func login_pasien(patient dataPasien) {
 }
 
 func login_dokter() {
-	fmt.Println("coba aja ini mah")
-	fmt.Println("P")
+
 }
 
 func main() {
-	fmt.Println("halooo")
-	fmt.Println("besok kalkulus anjing")
-	fmt.Println("susah bgst")
-	fmt.Println("Iyaa cokkk")
 
 }
