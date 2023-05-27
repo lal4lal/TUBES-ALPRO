@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 )
 
@@ -193,11 +194,13 @@ func sortingKonsultasiTag() {
 
 func addKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, idxPasien int) {
 	scanner := bufio.NewScanner(os.Stdin)
-	if scanner.Scan() {
-		fmt.Printf("Silahkan masukkan masalah kesehatan anda: ")
-		konsul.infoKonsul[idxPasien].pertanyaan = scanner.Text()
-		fmt.Printf("Input was: %q\n", konsul.infoKonsul[idxPasien].pertanyaan)
+	fmt.Printf("Silahkan masukkan masalah kesehatan anda: ")
+	scanner.Scan()
+	err := scanner.Err()
+	if err != nil {
+		log.Fatal(err)
 	}
+	fmt.Printf("read line: %s-\n", scanner.Text())
 }
 
 func replyKonsultasiPasien() {
