@@ -42,6 +42,7 @@ type dataDokter [nmax]dokter
 func menu(patient dataPasien) {
 	var option int
 	fmt.Println("*=============Selamat Datang=============*")
+	fmt.Println("|          Silahkan Pilih Role           |")
 	fmt.Println("|          1. Sebagai pasien             |")
 	fmt.Println("|          2. Sebagai dokter             |")
 	fmt.Println("|          0. keluar                     |")
