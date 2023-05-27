@@ -10,7 +10,6 @@ type pasien struct {
 	pasienID string
 	nama     string
 	umur     int
-	konsul   [nmax]string
 	password string
 }
 
@@ -37,7 +36,14 @@ type dataPasien struct {
 	infoPasien [nmax]pasien
 	n          int
 }
-type dataDokter [nmax]dokter
+type dataDokter struct {
+	infoDokter [nmax]dokter
+	n          int
+}
+type dataKonsul struct {
+	infoKonsul [nmax]konsultasi
+	n          int
+}
 
 func menu(patient dataPasien) {
 	var option int
@@ -119,8 +125,6 @@ func menuPasien(patient *dataPasien) {
 	} else if option == 3 {
 		menuguest(*patient)
 	} else if option == 1 {
-		patient.infoPasien[0].nama = "dosen"
-		patient.infoPasien[0].password = "alpro"
 		login_pasien(patient)
 	}
 }
@@ -128,7 +132,7 @@ func menuPasien(patient *dataPasien) {
 func login_pasien(patient *dataPasien) {
 	var nama, pass string
 	var success bool = false
-	var i int
+	var idxPasien int
 	fmt.Println("*==================Login==================*")
 	fmt.Println("Input data anda dibawah ini")
 	fmt.Print("username :")
@@ -136,13 +140,9 @@ func login_pasien(patient *dataPasien) {
 	fmt.Print("Password :")
 	fmt.Scan(&pass)
 	for !success {
-		if patient.infoPasien[0].nama == "dosen" && patient.infoPasien[0].password == "alpro" {
-			success = true
-		} else {
-			for i = 0; i < patient.n; i++ {
-				if (patient.infoPasien[i].nama == nama && patient.infoPasien[i].password == pass) || (patient.infoPasien[0].nama == "dosen" && patient.infoPasien[0].password == "alpro") {
-					success = true
-				}
+		for idxPasien = 0; idxPasien < patient.n; idxPasien++ {
+			if patient.infoPasien[idxPasien].nama == nama && patient.infoPasien[idxPasien].password == pass {
+				success = true
 			}
 		}
 		if !success {
@@ -154,11 +154,12 @@ func login_pasien(patient *dataPasien) {
 			fmt.Scan(&pass)
 		}
 	}
-	homePasien(patient)
+	homePasien(patient, idxPasien)
 }
 
-func homePasien(patient *dataPasien) {
+func homePasien(patient *dataPasien, idxPasien int) {
 	var i, option int
+	var konsul dataKonsul
 	fmt.Println("")
 	fmt.Println("Selamat Datang", patient.infoPasien[i].nama)
 	fmt.Println("-----------------------------------")
@@ -168,14 +169,14 @@ func homePasien(patient *dataPasien) {
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
 	for option != 1 && option != 0 && option != 2 {
-		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
+		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
 		fmt.Println("Masukkan pilihan anda: ")
 		fmt.Scan(&option)
 	}
 	if option == 0 {
 		menuPasien(patient)
 	} else if option == 1 {
-		addKonsultasiPasien()
+		addKonsultasiPasien(patient, &konsul, idxPasien)
 	} else if option == 2 {
 		replyKonsultasiPasien()
 	}
@@ -189,8 +190,9 @@ func sortingKonsultasiTag() {
 	fmt.Println("sorting")
 }
 
-func addKonsultasiPasien() {
-
+func addKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, idxPasien int) {
+	fmt.Println("Silahkan masukkan masalah kesehatan anda: ")
+	fmt.Scanln(&konsul.infoKonsul[idxPasien].pertanyaan)
 }
 
 func replyKonsultasiPasien() {
