@@ -177,7 +177,7 @@ func homePasien(patient *dataPasien, idxPasien int) {
 	if option == 0 {
 		menuPasien(patient)
 	} else if option == 1 {
-		addKonsultasiPasien(patient, &konsul, idxPasien)
+		postKonsul_fromPasien(patient, &konsul, idxPasien)
 	} else if option == 2 {
 		replyKonsultasiPasien()
 	}
@@ -191,9 +191,22 @@ func sortingKonsultasiTag() {
 	fmt.Println("sorting")
 }
 
-func addKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, idxPasien int) {
+func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul, idxPasien int) {
+	var kalimat, kata string
+
+	fmt.Println("")
 	fmt.Println("Silahkan masukkan masalah kesehatan anda: ")
-	fmt.Scanln(&konsul.infoKonsul[idxPasien].pertanyaan)
+	fmt.Println("-----------------------------------------------------------------")
+	fmt.Println("petunjuk : klik enter lalu ketik 'post' apabila ingin memposting ")
+	fmt.Print("Apa yang ingin anda konsultasikan? ")
+
+	for kata != "post" {
+		kalimat += kata + " "
+		fmt.Scan(&kata)
+	}
+	konsul.infoKonsul[idxPasien].pertanyaan = kalimat
+	fmt.Println(konsul.infoKonsul[idxPasien].pertanyaan)
+
 }
 
 func replyKonsultasiPasien() {
