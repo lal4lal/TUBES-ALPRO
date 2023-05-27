@@ -25,6 +25,7 @@ type konsultasi struct {
 	pasienID   string
 	pertanyaan string
 	tag        tag
+	idxkonsul  int
 }
 
 type tag struct {
@@ -69,6 +70,8 @@ func menu(patient dataPasien) {
 }
 func menuguest(patient dataPasien) {
 	var option int
+	var konsul dataKonsul
+	// var idx konsultasi
 	fmt.Println("*================Welcome==================*")
 	fmt.Println("|      1. Lihat Konsultasi Pasien         |")
 	fmt.Println("|      2. Cari Konsultasi Pasien          |")
@@ -84,7 +87,7 @@ func menuguest(patient dataPasien) {
 	if option == 0 {
 		menuPasien(&patient)
 	} else if option == 1 {
-		sortingKonsultasiTag()
+		sortingKonsultasiTag(&patient, &konsul)
 	} else if option == 2 {
 		searchKonsultasiTag()
 	}
@@ -168,6 +171,7 @@ func homePasien(patient *dataPasien, idxPasien int) {
 	fmt.Println(" 2. Tanggapi Konsultasi     ")
 	fmt.Println(" 0. Keluar dari Akun        ")
 	fmt.Print("Masukkan pilihan anda: ")
+	fmt.Println()
 	fmt.Scan(&option)
 	for option != 1 && option != 0 && option != 2 {
 		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
@@ -177,7 +181,7 @@ func homePasien(patient *dataPasien, idxPasien int) {
 	if option == 0 {
 		menuPasien(patient)
 	} else if option == 1 {
-		postKonsul_fromPasien(patient, &konsul, idxPasien)
+		postKonsul_fromPasien(patient, &konsul)
 	} else if option == 2 {
 		replyKonsultasiPasien()
 	}
@@ -187,25 +191,59 @@ func searchKonsultasiTag() {
 	fmt.Println("searchKonsultasiTag")
 }
 
-func sortingKonsultasiTag() {
-	fmt.Println("sorting")
+func sortingKonsultasiTag(patient *dataPasien, konsul *dataKonsul) {
+	var i int
+	i = 0
+	fmt.Println("")
+	fmt.Println("Berikut Ini adalah daftar konsultasi pasien :")
+	fmt.Println("---------------------------------------------")
+	for i < 5 {
+		fmt.Println(konsul.infoKonsul[i].pertanyaan)
+		i++
+	}
+	menuPasien(patient)
+
 }
 
-func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul, idxPasien int) {
+func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 	var kalimat, kata string
+	var option, idxPasien, idx int
+	var key bool = true
 
-	fmt.Println("")
-	fmt.Println("Silahkan masukkan masalah kesehatan anda: ")
-	fmt.Println("-----------------------------------------------------------------")
-	fmt.Println("petunjuk : klik enter lalu ketik 'post' apabila ingin memposting ")
-	fmt.Print("Apa yang ingin anda konsultasikan? ")
+	for key != false {
+		fmt.Println("")
+		fmt.Println("Silahkan masukkan masalah kesehatan anda: ")
+		fmt.Println("-----------------------------------------------------------------")
+		fmt.Println("petunjuk : klik enter lalu ketik 'post' apabila ingin memposting ")
+		fmt.Print("Apa yang ingin anda konsultasikan? ")
+		kalimat = ""
+		kata = ""
+		for kata != "post" {
+			kalimat += kata + " "
+			fmt.Scan(&kata)
+		}
+		konsul.infoKonsul[idx].pertanyaan = kalimat
+		fmt.Println("Anda berhasil memposting! ")
+		fmt.Println("1. Posting Konsultasi lain")
+		fmt.Println("0. kembali  ")
+		fmt.Print("Masukan Pilihan anda: ")
+		fmt.Scan(&option)
+		if option != 1 && option != 0 {
+			fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
+			fmt.Println("Masukkan pilihan anda: ")
+			fmt.Scan(&option)
+		}
+		if option == 1 {
+			key = true
+		} else {
+			key = false
+		}
+		konsul.infoKonsul[idx].idxkonsul++
+		idx++
 
-	for kata != "post" {
-		kalimat += kata + " "
-		fmt.Scan(&kata)
 	}
-	konsul.infoKonsul[idxPasien].pertanyaan = kalimat
-	fmt.Println(konsul.infoKonsul[idxPasien].pertanyaan)
+	fmt.Println(konsul.infoKonsul[0].pertanyaan)
+	homePasien(patient, idxPasien)
 
 }
 
