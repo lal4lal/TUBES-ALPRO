@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"log"
-	"os"
 )
 
 const nmax int = 2048
@@ -193,14 +190,8 @@ func sortingKonsultasiTag() {
 }
 
 func addKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, idxPasien int) {
-	scanner := bufio.NewScanner(os.Stdin)
-	fmt.Printf("Silahkan masukkan masalah kesehatan anda: ")
-	scanner.Scan()
-	err := scanner.Err()
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("read line: %s-\n", scanner.Text())
+	fmt.Println("Silahkan masukkan masalah kesehatan anda: ")
+	fmt.Scanln(&konsul.infoKonsul[idxPasien].pertanyaan)
 }
 
 func replyKonsultasiPasien() {
