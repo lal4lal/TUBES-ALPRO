@@ -36,6 +36,7 @@ type dataPasien struct {
 	infoPasien [nmax]pasien
 	n          int
 }
+
 type dataDokter struct {
 	infoDokter [nmax]dokter
 	n          int
@@ -204,7 +205,13 @@ func login_dokter() {
 }
 
 func main() {
-	var pasien dataPasien
-	menu(pasien)
-
+	var patient dataPasien
+	patient.infoPasien[0] = pasien{
+		pasienID: "",
+		nama:     "admin",
+		umur:     18,
+		password: "admin",
+	}
+	patient.n = 1
+	menu(patient)
 }
