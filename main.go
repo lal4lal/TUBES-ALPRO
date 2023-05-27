@@ -155,10 +155,10 @@ func login_pasien(patient *dataPasien) {
 			fmt.Scan(&pass)
 		}
 	}
-	homePasien(&patient, idxPasien)
+	homePasien(patient, idxPasien)
 }
 
-func homePasien(patient *dataPasien, idxPasien) {
+func homePasien(patient *dataPasien, idxPasien int) {
 	var i, option int
 	fmt.Println("")
 	fmt.Println("Selamat Datang", patient.infoPasien[i].nama)
@@ -190,12 +190,12 @@ func sortingKonsultasiTag() {
 	fmt.Println("sorting")
 }
 
-func addKonsultasiPasien(patient *dataPasien, konsul *dataKonsul) {
+func addKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, idxPasien int) {
 	scanner := bufio.NewScanner(os.Stdin)
 	if scanner.Scan() {
 		fmt.Printf("Silahkan masukkan masalah kesehatan anda: ")
-		konsul.infoKonsul[i].pertanyaan = scanner.Text()
-		fmt.Printf("Input was: %q\n", konsul.infoKonsul[i].pertanyaan)
+		konsul.infoKonsul[idxPasien].pertanyaan = scanner.Text()
+		fmt.Printf("Input was: %q\n", konsul.infoKonsul[idxPasien].pertanyaan)
 	}
 }
 
