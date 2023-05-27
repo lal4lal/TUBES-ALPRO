@@ -158,8 +158,9 @@ func login_pasien(patient *dataPasien) {
 	homePasien(patient, idxPasien)
 }
 
-func homePasien(patient *dataPasien, konsul *dataKonsul, idxPasien int) {
+func homePasien(patient *dataPasien, idxPasien int) {
 	var i, option int
+	var konsul dataKonsul
 	fmt.Println("")
 	fmt.Println("Selamat Datang", patient.infoPasien[i].nama)
 	fmt.Println("-----------------------------------")
@@ -176,7 +177,7 @@ func homePasien(patient *dataPasien, konsul *dataKonsul, idxPasien int) {
 	if option == 0 {
 		menuPasien(patient)
 	} else if option == 1 {
-		addKonsultasiPasien(patient, konsul, idxPasien)
+		addKonsultasiPasien(patient, &konsul, idxPasien)
 	} else if option == 2 {
 		replyKonsultasiPasien()
 	}
