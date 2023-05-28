@@ -36,11 +36,13 @@ type tag struct {
 type dataPasien struct {
 	infoPasien [nmax]pasien
 	n          int
+	nama, pass string
 }
 
 type dataDokter struct {
 	infoDokter [nmax]dokter
 	n          int
+	nama, pass string
 }
 type dataKonsul struct {
 	infoKonsul [nmax]konsultasi
@@ -50,6 +52,7 @@ type dataKonsul struct {
 func menu(patient dataPasien) {
 	var option int
 	var konsul dataKonsul
+	var doctor dataDokter
 	fmt.Println("*=============Selamat Datang=============*")
 	fmt.Println("|          Silahkan Pilih Role           |")
 	fmt.Println("|          1. Sebagai pasien             |")
@@ -66,7 +69,7 @@ func menu(patient dataPasien) {
 	if option == 1 {
 		menuPasien(&patient, &konsul)
 	} else if option == 2 {
-		login_dokter()
+		login_dokter(&doctor, &konsul)
 	}
 }
 func menuguest(patient *dataPasien, konsul *dataKonsul) {
@@ -97,7 +100,6 @@ func menuguest(patient *dataPasien, konsul *dataKonsul) {
 }
 
 func signUp(patient *dataPasien) {
-
 	fmt.Println("*==================Sign Up===================*")
 	fmt.Println("|   Silahkan masukkan data yang dibutuhkan   |")
 	fmt.Println("*============================================*")
@@ -136,45 +138,49 @@ func menuPasien(patient *dataPasien, konsul *dataKonsul) {
 }
 
 func login_pasien(patient *dataPasien) {
-	var nama, pass string
 	var success bool = false
 	var konsul dataKonsul
 	var idxPasien int
 	fmt.Println("*==================Login==================*")
 	fmt.Println("Input data anda dibawah ini")
 	fmt.Print("username :")
-	fmt.Scan(&nama)
+	fmt.Scan(&patient.nama)
 	fmt.Print("Password :")
-	fmt.Scan(&pass)
+	fmt.Scan(&patient.pass)
+
 	for !success {
-		for idxPasien = 0; idxPasien < patient.n; idxPasien++ {
-			if patient.infoPasien[idxPasien].nama == nama && patient.infoPasien[idxPasien].password == pass {
+		for idxPasien = 0; idxPasien <= patient.n; idxPasien++ {
+			if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
 				success = true
 			}
 		}
+
 		if !success {
 			fmt.Printf("Mohon maaf! username atau password yang anda masukkan salah \n")
 			fmt.Println("Silahkan coba lagi")
 			fmt.Print("username :")
-			fmt.Scan(&nama)
+			fmt.Scan(&patient.nama)
 			fmt.Print("Password :")
-			fmt.Scan(&pass)
+			fmt.Scan(&patient.pass)
 		}
 	}
 	homePasien(&*patient, &konsul)
 }
 
 func homePasien(patient *dataPasien, konsul *dataKonsul) {
-	var i, option int
-	// var konsul dataKonsul
+	var option, idxPasien int
+
 	fmt.Println("")
-	fmt.Println("Selamat Datang", patient.infoPasien[i].nama)
+	for idxPasien = 0; idxPasien <= patient.n; idxPasien++ {
+		if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
+			fmt.Println("Selamat Datang", patient.infoPasien[idxPasien].nama)
+		}
+	}
 	fmt.Println("-----------------------------------")
 	fmt.Println(" 1. Konsultasi pada dokter! ")
 	fmt.Println(" 2. Tanggapi Konsultasi     ")
 	fmt.Println(" 0. Keluar dari Akun        ")
 	fmt.Print("Masukkan pilihan anda: ")
-	fmt.Println()
 	fmt.Scan(&option)
 	for option != 1 && option != 0 && option != 2 {
 		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
@@ -196,14 +202,36 @@ func searchKonsultasiTag() {
 }
 
 func sortingKonsultasiTag(patient *dataPasien, konsul *dataKonsul) {
-	var i int
+	var i, option int
 	fmt.Println("")
 	fmt.Println("Berikut Ini adalah daftar konsultasi pasien :")
 	fmt.Println("---------------------------------------------")
 	for i < 5 {
+		fmt.Println("")
+		fmt.Println(i+1, "Dari : ", patient.infoPasien[i].nama)
 		fmt.Println(konsul.infoKonsul[i].pertanyaan)
 		i++
 	}
+	fmt.Println("Anda hanya bisa melihat dalam mode tamu, Daftar akun?")
+	fmt.Println("=====================================================")
+	fmt.Println("1. Daftar akun                                       ")
+	fmt.Println("2. Kembali ke menu tamu                              ")
+	fmt.Println("0. Keluar mode tamu                                  ")
+	fmt.Print("Masukan Pilihan anda: ")
+	fmt.Scan(&option)
+	if option != 1 && option != 0 && option != 2 {
+		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
+		fmt.Println("Masukkan pilihan anda: ")
+		fmt.Scan(&option)
+	}
+	if option == 1 {
+		signUp(patient)
+	} else if option == 2 {
+		menuguest(patient, konsul)
+	} else {
+		menuPasien(patient, konsul)
+	}
+
 	// menuPasien(patient,konsul)
 
 }
@@ -255,18 +283,70 @@ func replyKonsultasiPasien() {
 
 }
 
-func login_dokter() {
+func homedokter(doctor dataDokter, konsul dataKonsul) {
+	var option int
+	var patient dataPasien
+	fmt.Println("")
+	fmt.Println("Selamat Datang Dr.", doctor.infoDokter[0].nama)
+	fmt.Println("-----------------------------------")
+	fmt.Println(" 1. Tampilakan topik ")
+	fmt.Println(" 2. Tanggapi Konsultasi     ")
+	fmt.Println(" 0. Keluar dari mode dokter        ")
+	fmt.Print("Masukkan pilihan anda: ")
+	fmt.Scan(&option)
+	for option != 1 && option != 0 && option != 2 {
+		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
+		fmt.Println("Masukkan pilihan anda: ")
+		fmt.Scan(&option)
+	}
+
+	if option == 0 {
+		login_dokter(&doctor, &konsul)
+	} else if option == 1 {
+		sortingKonsultasiTag(&patient, &konsul)
+	} else if option == 2 {
+		replyKonsultasiPasien()
+	}
 
 }
 
-func main() {
-	var patient dataPasien
-	patient.infoPasien[0] = pasien{
-		pasienID: "",
-		nama:     "admin",
-		umur:     18,
-		password: "admin",
+func login_dokter(doctor *dataDokter, konsul *dataKonsul) {
+	doctor.infoDokter[0].nama = "jordy"
+	doctor.infoDokter[0].password = "jordy"
+	var success bool
+	var idxdoctor int
+	fmt.Println("")
+	fmt.Println("*==================Login==================*")
+	fmt.Println("Input data anda dibawah ini")
+	fmt.Print("username :")
+	fmt.Scan(&doctor.nama)
+	fmt.Print("Password :")
+	fmt.Scan(&doctor.pass)
+
+	for !success {
+		for idxdoctor = 0; idxdoctor <= doctor.n; idxdoctor++ {
+			if doctor.infoDokter[idxdoctor].nama == doctor.nama && doctor.infoDokter[idxdoctor].password == doctor.pass {
+				success = true
+			}
+		}
+
+		if !success {
+			fmt.Printf("Mohon maaf! username atau password yang anda masukkan salah \n")
+			fmt.Println("Silahkan coba lagi")
+			fmt.Print("username :")
+			fmt.Scan(&doctor.nama)
+			fmt.Print("Password :")
+			fmt.Scan(&doctor.pass)
+		}
 	}
-	patient.n = 1
+	homedokter(*doctor, *konsul)
+}
+
+func main() {
+	/* asumsi sementara kalo dokter ini udah tetap, karena di soal juga gadisebutin kalo dokter bisa daftar
+	jadi fokusnya kita sekarang nyelsein function inti aja biar cepet
+	username doctor = jordy
+	pass = jordy */
+	var patient dataPasien
 	menu(patient)
 }
