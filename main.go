@@ -124,7 +124,7 @@ func menuPasien(patient *dataPasien, konsul *dataKonsul) {
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
 	for option < 1 || option > 3 {
-		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan and kembali")
+		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
 		fmt.Println("Masukkan pilihan anda: ")
 		fmt.Scan(&option)
 	}
