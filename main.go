@@ -68,8 +68,6 @@ func menu(patient dataPasien) {
 }
 func menuguest(patient *dataPasien, konsul *dataKonsul) {
 	var option int
-	// var konsul dataKonsul
-	// var idx konsultasi
 	fmt.Println("*================Welcome==================*")
 	fmt.Println("|      1. Lihat Konsultasi Pasien         |")
 	fmt.Println("|      2. Cari Konsultasi Pasien          |")
@@ -132,8 +130,10 @@ func login_pasien(patient *dataPasien, konsul *dataKonsul) {
 	var success bool = false
 	var idxPasien int
 	fmt.Println("*==================Login==================*")
-	fmt.Println("Input data anda dibawah ini")
-	fmt.Println("(ketik 0 apabila belum memiliki akun)")
+	fmt.Println("|       Input data anda dibawah ini       |")
+	fmt.Println("*=========================================*")
+	fmt.Println("(!) ketik 0 apabila belum memiliki akun (!)")
+	fmt.Println("*=========================================*")
 	fmt.Print("username :")
 	fmt.Scan(&patient.nama)
 	fmt.Print("Password :")
@@ -176,10 +176,11 @@ func homePasien(patient *dataPasien, konsul *dataKonsul) {
 			fmt.Println("Selamat Datang", patient.infoPasien[idxPasien].nama)
 		}
 	}
-	fmt.Println("-----------------------------------")
-	fmt.Println(" 1. Konsultasi pada dokter! ")
-	fmt.Println(" 2. Tanggapi Konsultasi     ")
-	fmt.Println(" 0. Keluar dari Akun        ")
+	fmt.Println("*================================*")
+	fmt.Println("|   1. Konsultasi pada dokter!   |")
+	fmt.Println("|   2. Tanggapi Konsultasi       |")
+	fmt.Println("|   0. Keluar dari Akun          |")
+	fmt.Println("*================================*")
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
 	for option != 1 && option != 0 && option != 2 {
@@ -203,18 +204,19 @@ func searchKonsultasiTag() {
 
 func tampilanKonsul(patient *dataPasien, konsul *dataKonsul) {
 	var i, j, option int
-	fmt.Println("")
-	fmt.Println(" Berikut Ini adalah daftar konsultasi pasien:")
-	fmt.Println("==============================================")
+	fmt.Println("*================================================*")
+	fmt.Println("|  Berikut Ini adalah daftar konsultasi pasien:  |")
+	fmt.Println("*================================================*")
 	for i = 0; i < patient.n; i++ {
-		fmt.Println(i+1, "Dari : ", patient.infoPasien[i].nama)
+		fmt.Printf("%v.) Nama Pasien: %v\n", i+1, patient.infoPasien[i].nama)
 		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
-			fmt.Println(konsul.infoKonsul[i].pertanyaan[j])
+			fmt.Printf("%v. %v\n", j+1, konsul.infoKonsul[i].pertanyaan[j])
 		}
-		fmt.Println("==============================================")
+		fmt.Println("*================================================*")
 	}
-	fmt.Println("1. Kembali ke menu pasien                            ")
-	fmt.Println("0. Keluar akun                                       ")
+	fmt.Println("|           1. Kembali ke menu pasien            |")
+	fmt.Println("|           0. Keluar akun                       |")
+	fmt.Println("*================================================*")
 	fmt.Print("Masukan Pilihan anda: ")
 	fmt.Scan(&option)
 	if option != 1 && option != 0 {
@@ -237,7 +239,6 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 
 	fmt.Println("Selamat Datang, Silahkan konsultasi", patient.nama)
 	for key {
-		//mengecek apakah pasien sudah pernah membuat konsul
 		found = false
 		idxPasien = 0
 		for idxPasien < patient.n && !found {
@@ -247,12 +248,12 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 			}
 			idxPasien++
 		}
-		fmt.Println(idxPasien)
 		if !found {
 			konsul.n++
 		}
-		fmt.Println("-----------------------------------------------------------------")
-		fmt.Println("petunjuk : klik enter lalu ketik 'post' apabila ingin memposting ")
+		fmt.Println("*================================================================================*")
+		fmt.Println("|    (!) petunjuk : klik enter lalu ketik 'post' apabila ingin memposting (!)    |")
+		fmt.Println("*================================================================================*")
 		fmt.Print("Apa yang ingin anda konsultasikan? ")
 		kalimat = ""
 		kata = ""
@@ -261,13 +262,15 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 			fmt.Scan(&kata)
 		}
 		konsul.infoKonsul[idxPasien].pertanyaan[konsul.infoKonsul[idxPasien].nPertanyaan] = kalimat
-		fmt.Println(konsul.infoKonsul[idxPasien].pertanyaan[konsul.infoKonsul[idxPasien].nPertanyaan])
-		fmt.Println("Anda berhasil memposting! ")
+		fmt.Println("*================================================================================*")
+		fmt.Println("|             Terima Kasih Atas Konsultasi Anda, Semoga Lekas Sembuh             |")
+		fmt.Println("*================================================================================*")
 		konsul.infoKonsul[idxPasien].nPertanyaan++
 		fmt.Println(konsul.infoKonsul[idxPasien].nPertanyaan)
-		fmt.Println("1. Posting Konsultasi lain")
-		fmt.Println("2. Lihat postingan anda   ")
-		fmt.Println("0. kembali  ")
+		fmt.Println("|                            1. Posting Konsultasi lain                          |")
+		fmt.Println("|                            2. Lihat postingan anda                             |")
+		fmt.Println("|                            0. kembali                                          |")
+		fmt.Println("*================================================================================*")
 		fmt.Print("Masukan Pilihan anda: ")
 		fmt.Scan(&option)
 		if option != 1 && option != 0 && option != 2 {
