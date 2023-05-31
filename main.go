@@ -210,7 +210,7 @@ func tampilanKonsul(patient *dataPasien, konsul *dataKonsul) {
 	for i = 0; i < patient.n; i++ {
 		fmt.Printf("%v.) Nama Pasien: %v\n", i+1, patient.infoPasien[i].nama)
 		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
-			fmt.Printf("%v. %v\n", j+1, konsul.infoKonsul[i].pertanyaan[j])
+			fmt.Printf("	 %v. %v\n", j+1, konsul.infoKonsul[i].pertanyaan[j])
 		}
 		fmt.Println("*================================================*")
 	}
