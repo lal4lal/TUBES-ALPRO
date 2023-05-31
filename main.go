@@ -206,14 +206,13 @@ func tampilanKonsul(patient *dataPasien, konsul *dataKonsul) {
 	fmt.Println("")
 	fmt.Println(" Berikut Ini adalah daftar konsultasi pasien:")
 	fmt.Println("==============================================")
-	for i = 0; i < konsul.n; i++ {
+	for i = 0; i < patient.n; i++ {
 		fmt.Println(i+1, "Dari : ", patient.infoPasien[i].nama)
 		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
 			fmt.Println(konsul.infoKonsul[i].pertanyaan[j])
 		}
-		fmt.Println("=================================================================")
+		fmt.Println("==============================================")
 	}
-	fmt.Println("=====================================================")
 	fmt.Println("1. Kembali ke menu pasien                            ")
 	fmt.Println("0. Keluar akun                                       ")
 	fmt.Print("Masukan Pilihan anda: ")
@@ -239,6 +238,7 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 	fmt.Println("Selamat Datang, Silahkan konsultasi", patient.nama)
 	for key {
 		//mengecek apakah pasien sudah pernah membuat konsul
+		found = false
 		idxPasien = 0
 		for idxPasien < patient.n && !found {
 			if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
@@ -248,7 +248,7 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 			idxPasien++
 		}
 		fmt.Println(idxPasien)
-		if idxPasien == patient.n-1 {
+		if !found {
 			konsul.n++
 		}
 		fmt.Println("-----------------------------------------------------------------")
