@@ -99,7 +99,7 @@ func signUp(patient *dataPasien, konsul *dataKonsul) {
 	fmt.Print("Password: ")
 	fmt.Scan(&patient.infoPasien[patient.n].password)
 	patient.n++
-	fmt.Printf("---Anda akan diarahkan kembali menuju login--- \n")
+	fmt.Println("---Anda akan diarahkan kembali menuju login---")
 	login_pasien(patient, konsul)
 }
 
@@ -266,7 +266,6 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 		fmt.Println("|             Terima Kasih Atas Konsultasi Anda, Semoga Lekas Sembuh             |")
 		fmt.Println("*================================================================================*")
 		konsul.infoKonsul[idxPasien].nPertanyaan++
-		fmt.Println(konsul.infoKonsul[idxPasien].nPertanyaan)
 		fmt.Println("|                            1. Posting Konsultasi lain                          |")
 		fmt.Println("|                            2. Lihat postingan anda                             |")
 		fmt.Println("|                            0. kembali                                          |")
