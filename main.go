@@ -7,25 +7,19 @@ import (
 const nmax int = 2048
 
 type pasien struct {
-	pasienID string
 	nama     string
-	umur     int
 	password string
 }
 
 type dokter struct {
-	dokterID       string
-	nama           string
-	bidangKeahlian string
-	password       string
+	nama     string
+	password string
 }
 
 type konsultasi struct {
-	konsulID   string
-	pasienID   string
-	pertanyaan string
-	tag        tag
-	idxkonsul  int
+	pertanyaan  [nmax]string
+	nPertanyaan int
+	tag         tag
 }
 
 type tag struct {
@@ -91,8 +85,7 @@ func menuguest(patient *dataPasien, konsul *dataKonsul) {
 	if option == 0 {
 		menuPasien(&*patient, &*konsul)
 	} else if option == 1 {
-		// postKonsul_fromPasien(&patient, &konsul)
-		sortingKonsultasiTag(&*patient, &*konsul)
+		tampilanKonsul(&*patient, &*konsul)
 	} else if option == 2 {
 		searchKonsultasiTag()
 	}
@@ -105,8 +98,6 @@ func signUp(patient *dataPasien, konsul *dataKonsul) {
 	fmt.Println("*============================================*")
 	fmt.Print("Username: ")
 	fmt.Scan(&patient.infoPasien[patient.n].nama)
-	fmt.Print("Umur: ")
-	fmt.Scan(&patient.infoPasien[patient.n].umur)
 	fmt.Print("Password: ")
 	fmt.Scan(&patient.infoPasien[patient.n].password)
 	patient.n++
@@ -139,7 +130,6 @@ func menuPasien(patient *dataPasien, konsul *dataKonsul) {
 
 func login_pasien(patient *dataPasien, konsul *dataKonsul) {
 	var success bool = false
-	// var konsul dataKonsul
 	var idxPasien int
 	fmt.Println("*==================Login==================*")
 	fmt.Println("Input data anda dibawah ini")
@@ -211,71 +201,70 @@ func searchKonsultasiTag() {
 	fmt.Println("searchKonsultasiTag")
 }
 
-func sortingKonsultasiTag(patient *dataPasien, konsul *dataKonsul) {
-	var i, option int
+func tampilanKonsul(patient *dataPasien, konsul *dataKonsul) {
+	var i, j, option int
 	fmt.Println("")
-	fmt.Println("Berikut Ini adalah daftar konsultasi pasien :")
-	fmt.Println("---------------------------------------------")
-	for i < patient.n {
-		fmt.Println("")
+	fmt.Println(" Berikut Ini adalah daftar konsultasi pasien:")
+	fmt.Println("==============================================")
+	for i = 0; i < konsul.n; i++ {
 		fmt.Println(i+1, "Dari : ", patient.infoPasien[i].nama)
-		fmt.Println(konsul.infoKonsul[i].pertanyaan)
+		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
+			fmt.Println(konsul.infoKonsul[i].pertanyaan[j])
+		}
 		fmt.Println("=================================================================")
-		i++
 	}
-	fmt.Println("Anda hanya bisa melihat dalam mode tamu, Daftar akun?")
 	fmt.Println("=====================================================")
-	fmt.Println("1. Daftar akun                                       ")
-	fmt.Println("2. Kembali ke menu tamu                              ")
-	fmt.Println("0. Keluar mode tamu                                  ")
+	fmt.Println("1. Kembali ke menu pasien                            ")
+	fmt.Println("0. Keluar akun                                       ")
 	fmt.Print("Masukan Pilihan anda: ")
 	fmt.Scan(&option)
-	if option != 1 && option != 0 && option != 2 {
+	if option != 1 && option != 0 {
 		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
 		fmt.Println("Masukkan pilihan anda: ")
 		fmt.Scan(&option)
 	}
 	if option == 1 {
-		signUp(patient, konsul)
-	} else if option == 2 {
-		menuguest(patient, konsul)
+		homePasien(patient, konsul)
 	} else {
 		menuPasien(patient, konsul)
 	}
-
-	// menuPasien(patient,konsul)
-
 }
 
 func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 	var kalimat, kata string
 	var option, idxPasien int
 	var key bool = true
+	var found bool = false
 
-	for key != false {
-		fmt.Println("")
-		for idxPasien = 0; idxPasien <= patient.n; idxPasien++ {
+	fmt.Println("Selamat Datang, Silahkan konsultasi", patient.nama)
+	for key {
+		//mengecek apakah pasien sudah pernah membuat konsul
+		idxPasien = 0
+		for idxPasien < patient.n && !found {
 			if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
-				fmt.Println("Selamat Datang, Silahkan konsultasi", patient.infoPasien[idxPasien].nama)
-				fmt.Println(idxPasien)
+				found = true
+				idxPasien--
 			}
+			idxPasien++
+		}
+		fmt.Println(idxPasien)
+		if idxPasien == patient.n-1 {
+			konsul.n++
 		}
 		fmt.Println("-----------------------------------------------------------------")
 		fmt.Println("petunjuk : klik enter lalu ketik 'post' apabila ingin memposting ")
 		fmt.Print("Apa yang ingin anda konsultasikan? ")
-		for idxPasien = 0; idxPasien <= patient.n; idxPasien++ {
-			if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
-				konsul.n = idxPasien
-			}
-		}
 		kalimat = ""
 		kata = ""
 		for kata != "post" {
 			kalimat += kata + " "
 			fmt.Scan(&kata)
 		}
-		konsul.infoKonsul[konsul.n].pertanyaan = kalimat
+		konsul.infoKonsul[idxPasien].pertanyaan[konsul.infoKonsul[idxPasien].nPertanyaan] = kalimat
+		fmt.Println(konsul.infoKonsul[idxPasien].pertanyaan[konsul.infoKonsul[idxPasien].nPertanyaan])
 		fmt.Println("Anda berhasil memposting! ")
+		konsul.infoKonsul[idxPasien].nPertanyaan++
+		fmt.Println(konsul.infoKonsul[idxPasien].nPertanyaan)
 		fmt.Println("1. Posting Konsultasi lain")
 		fmt.Println("2. Lihat postingan anda   ")
 		fmt.Println("0. kembali  ")
@@ -289,15 +278,12 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 		if option == 1 {
 			key = true
 		} else if option == 2 {
-			sortingKonsultasiTag(patient, konsul)
+			tampilanKonsul(&*patient, &*konsul)
 		} else {
 			key = false
 		}
-		fmt.Println(konsul.n)
 	}
-	fmt.Println(konsul.infoKonsul[1].pertanyaan)
 	homePasien(&*patient, &*konsul)
-
 }
 
 func replyKonsultasiPasien() {
@@ -324,7 +310,7 @@ func homedokter(doctor dataDokter, konsul dataKonsul) {
 	if option == 0 {
 		login_dokter(&doctor, &konsul)
 	} else if option == 1 {
-		sortingKonsultasiTag(&patient, &konsul)
+		tampilanKonsul(&patient, &konsul)
 	} else if option == 2 {
 		replyKonsultasiPasien()
 	}
