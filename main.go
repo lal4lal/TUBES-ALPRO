@@ -99,7 +99,7 @@ func menuguest(patient *dataPasien, konsul *dataKonsul) {
 
 }
 
-func signUp(patient *dataPasien) {
+func signUp(patient *dataPasien, konsul *dataKonsul) {
 	fmt.Println("*==================Sign Up===================*")
 	fmt.Println("|   Silahkan masukkan data yang dibutuhkan   |")
 	fmt.Println("*============================================*")
@@ -111,7 +111,7 @@ func signUp(patient *dataPasien) {
 	fmt.Scan(&patient.infoPasien[patient.n].password)
 	patient.n++
 	fmt.Printf("---Anda akan diarahkan kembali menuju login--- \n")
-	login_pasien(patient)
+	login_pasien(patient, konsul)
 }
 
 func menuPasien(patient *dataPasien, konsul *dataKonsul) {
@@ -129,24 +129,29 @@ func menuPasien(patient *dataPasien, konsul *dataKonsul) {
 		fmt.Scan(&option)
 	}
 	if option == 2 {
-		signUp(patient)
+		signUp(patient, konsul)
 	} else if option == 3 {
 		menuguest(&*patient, &*konsul)
 	} else if option == 1 {
-		login_pasien(patient)
+		login_pasien(patient, konsul)
 	}
 }
 
-func login_pasien(patient *dataPasien) {
+func login_pasien(patient *dataPasien, konsul *dataKonsul) {
 	var success bool = false
-	var konsul dataKonsul
+	// var konsul dataKonsul
 	var idxPasien int
 	fmt.Println("*==================Login==================*")
 	fmt.Println("Input data anda dibawah ini")
+	fmt.Println("(ketik 0 apabila belum memiliki akun)")
 	fmt.Print("username :")
 	fmt.Scan(&patient.nama)
 	fmt.Print("Password :")
 	fmt.Scan(&patient.pass)
+
+	if patient.nama == "0" && patient.pass == "0" {
+		menuPasien(patient, &*konsul)
+	}
 
 	for !success {
 		for idxPasien = 0; idxPasien <= patient.n; idxPasien++ {
@@ -158,13 +163,18 @@ func login_pasien(patient *dataPasien) {
 		if !success {
 			fmt.Printf("Mohon maaf! username atau password yang anda masukkan salah \n")
 			fmt.Println("Silahkan coba lagi")
+			fmt.Println("(ketik 0 apabila belum memiliki akun)")
 			fmt.Print("username :")
 			fmt.Scan(&patient.nama)
 			fmt.Print("Password :")
 			fmt.Scan(&patient.pass)
+
+			if patient.nama == "0" && patient.pass == "0" {
+				menuPasien(patient, &*konsul)
+			}
 		}
 	}
-	homePasien(&*patient, &konsul)
+	homePasien(&*patient, &*konsul)
 }
 
 func homePasien(patient *dataPasien, konsul *dataKonsul) {
@@ -206,7 +216,7 @@ func sortingKonsultasiTag(patient *dataPasien, konsul *dataKonsul) {
 	fmt.Println("")
 	fmt.Println("Berikut Ini adalah daftar konsultasi pasien :")
 	fmt.Println("---------------------------------------------")
-	for i < konsul.n {
+	for i < patient.n {
 		fmt.Println("")
 		fmt.Println(i+1, "Dari : ", patient.infoPasien[i].nama)
 		fmt.Println(konsul.infoKonsul[i].pertanyaan)
@@ -226,7 +236,7 @@ func sortingKonsultasiTag(patient *dataPasien, konsul *dataKonsul) {
 		fmt.Scan(&option)
 	}
 	if option == 1 {
-		signUp(patient)
+		signUp(patient, konsul)
 	} else if option == 2 {
 		menuguest(patient, konsul)
 	} else {
@@ -239,16 +249,25 @@ func sortingKonsultasiTag(patient *dataPasien, konsul *dataKonsul) {
 
 func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 	var kalimat, kata string
-	var option int
+	var option, idxPasien int
 	var key bool = true
 
 	for key != false {
 		fmt.Println("")
-		fmt.Println("Silahkan masukkan masalah kesehatan anda: ")
+		for idxPasien = 0; idxPasien <= patient.n; idxPasien++ {
+			if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
+				fmt.Println("Selamat Datang, Silahkan konsultasi", patient.infoPasien[idxPasien].nama)
+				fmt.Println(idxPasien)
+			}
+		}
 		fmt.Println("-----------------------------------------------------------------")
 		fmt.Println("petunjuk : klik enter lalu ketik 'post' apabila ingin memposting ")
 		fmt.Print("Apa yang ingin anda konsultasikan? ")
-		fmt.Println(konsul.n)
+		for idxPasien = 0; idxPasien <= patient.n; idxPasien++ {
+			if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
+				konsul.n = idxPasien
+			}
+		}
 		kalimat = ""
 		kata = ""
 		for kata != "post" {
@@ -274,10 +293,9 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 		} else {
 			key = false
 		}
-		konsul.n++
 		fmt.Println(konsul.n)
 	}
-	// fmt.Println(konsul.infoKonsul[0].pertanyaan)
+	fmt.Println(konsul.infoKonsul[1].pertanyaan)
 	homePasien(&*patient, &*konsul)
 
 }
