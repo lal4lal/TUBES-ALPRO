@@ -19,18 +19,20 @@ type dokter struct {
 type konsultasi struct {
 	pertanyaan  [nmax]string
 	nPertanyaan int
-	tag         tag
+	tanggapan   [nmax]string
+	ntanggapan  int
 }
 
-type tag struct {
-	konsulID string
-	tag      [5]string
-}
+// type tag struct {
+// 	konsulID string
+// 	tag      [5]string
+// }
 
 type dataPasien struct {
 	infoPasien [nmax]pasien
 	n          int
 	nama, pass string
+	tanggapan  string
 }
 
 type dataDokter struct {
@@ -68,6 +70,7 @@ func menu(patient dataPasien) {
 }
 func menuguest(patient *dataPasien, konsul *dataKonsul) {
 	var option int
+	var dokter dataDokter
 	fmt.Println("*================Welcome==================*")
 	fmt.Println("|      1. Lihat Konsultasi Pasien         |")
 	fmt.Println("|      2. Cari Konsultasi Pasien          |")
@@ -83,7 +86,7 @@ func menuguest(patient *dataPasien, konsul *dataKonsul) {
 	if option == 0 {
 		menuPasien(&*patient, &*konsul)
 	} else if option == 1 {
-		tampilanKonsul(&*patient, &*konsul)
+		tampilanKonsul(&*patient, &*konsul, &dokter)
 	} else if option == 2 {
 		searchKonsultasiTag()
 	}
@@ -168,6 +171,7 @@ func login_pasien(patient *dataPasien, konsul *dataKonsul) {
 }
 
 func homePasien(patient *dataPasien, konsul *dataKonsul) {
+	var dokter dataDokter
 	var option, idxPasien int
 
 	fmt.Println("")
@@ -194,7 +198,7 @@ func homePasien(patient *dataPasien, konsul *dataKonsul) {
 	} else if option == 1 {
 		postKonsul_fromPasien(&*patient, &*konsul)
 	} else if option == 2 {
-		replyKonsultasiPasien()
+		replyKonsultasiPasien(patient, konsul, &dokter)
 	}
 }
 
@@ -202,18 +206,34 @@ func searchKonsultasiTag() {
 	fmt.Println("searchKonsultasiTag")
 }
 
-func tampilanKonsul(patient *dataPasien, konsul *dataKonsul) {
+func tampilanKonsul(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter) {
 	var i, j, option int
+
 	fmt.Println("*================================================*")
 	fmt.Println("|  Berikut Ini adalah daftar konsultasi pasien:  |")
 	fmt.Println("*================================================*")
+
 	for i = 0; i < patient.n; i++ {
+
+		/* -- PROSES MENAMPILKAN PERTANYAAN -- */
 		fmt.Printf("%v.) Nama Pasien: %v\n", i+1, patient.infoPasien[i].nama)
 		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
-			fmt.Printf("	 %v. %v\n", j+1, konsul.infoKonsul[i].pertanyaan[j])
+			fmt.Printf("  %v. %v\n", j+1, konsul.infoKonsul[i].pertanyaan[j])
 		}
+		fmt.Println("Tanggapan : ")
+		/* -- PROSES MENAMPILKAN TANGGAPAN -- */
+		if konsul.infoKonsul[i].ntanggapan == 0 {
+			fmt.Println("  [BELUM ADA TANGGAPAN]")
+		} else {
+			for j = 0; j < konsul.infoKonsul[i].ntanggapan; j++ {
+				fmt.Printf("   %v\n", konsul.infoKonsul[i].tanggapan[j])
+			}
+		}
+
 		fmt.Println("*================================================*")
+
 	}
+
 	fmt.Println("|           1. Kembali ke menu pasien            |")
 	fmt.Println("|           0. Keluar akun                       |")
 	fmt.Println("*================================================*")
@@ -229,11 +249,13 @@ func tampilanKonsul(patient *dataPasien, konsul *dataKonsul) {
 	} else {
 		menuPasien(patient, konsul)
 	}
+
 }
 
 func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 	var kalimat, kata string
 	var option, idxPasien int
+	var dokter dataDokter
 	var key bool = true
 	var found bool = false
 
@@ -280,7 +302,7 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 		if option == 1 {
 			key = true
 		} else if option == 2 {
-			tampilanKonsul(&*patient, &*konsul)
+			tampilanKonsul(&*patient, &*konsul, &dokter)
 		} else {
 			key = false
 		}
@@ -288,7 +310,80 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 	homePasien(&*patient, &*konsul)
 }
 
-func replyKonsultasiPasien() {
+func replyKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter) {
+	var idxPasien, i, j, option int
+	var kalimat, kata string
+	var found, key bool
+
+	fmt.Println("*================================================*")
+	fmt.Println("|       Tanggapi Konsultasi Pasien lain!         |")
+	fmt.Println("|        (pilih nama pasien konsultasi)          |")
+	fmt.Println("*================================================*")
+
+	/* -- SEQUENSIAL SEARCH (MENAMPILKAN NAMA BESERTA PERTANYAAN) -- */
+	for i = 0; i < patient.n; i++ {
+		fmt.Printf("%v.) Nama Pasien: %v\n", i+1, patient.infoPasien[i].nama)
+		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
+			fmt.Printf("  %v. %v\n", j+1, konsul.infoKonsul[i].pertanyaan[j])
+		}
+		fmt.Println(" Tanggapan :                                       ")
+		fmt.Println("*=================================================*")
+	}
+	/* -- SEQUENSIAL SEARCH (MENAMPILKAN NAMA BESERTA PERTANYAAN) -- */
+
+	/* -- SEQUENSIAL SEARCH (POSTING TANGGAPAN/REPLY) -- */
+	fmt.Print("Pilih nama pasien : ")
+	fmt.Scan(&patient.nama)
+	key = true
+	for key {
+		found = false
+		idxPasien = 0
+		for idxPasien < patient.n && !found {
+			if patient.infoPasien[idxPasien].nama == patient.nama {
+				found = true
+				idxPasien--
+			}
+			idxPasien++
+		}
+		if !found {
+			konsul.n++
+		}
+		fmt.Println("*================================================================================*")
+		fmt.Println("|    (!) petunjuk : klik enter lalu ketik 'post' apabila ingin memposting (!)    |")
+		fmt.Println("*================================================================================*")
+		fmt.Print("Apa yang ingin anda Tanggapi? ")
+		kalimat = ""
+		kata = ""
+		for kata != "post" {
+			kalimat += kata + " "
+			fmt.Scan(&kata)
+		}
+		konsul.infoKonsul[idxPasien].tanggapan[konsul.infoKonsul[idxPasien].ntanggapan] = kalimat
+		fmt.Println("*================================================================================*")
+		fmt.Println("|             Terima Kasih Atas Konsultasi Anda, Semoga Lekas Sembuh             |")
+		fmt.Println("*================================================================================*")
+		konsul.infoKonsul[idxPasien].ntanggapan++
+		fmt.Println("|                            1. Posting tanggapan lain                          |")
+		fmt.Println("|                            0. kembali                                          |")
+		fmt.Println("*================================================================================*")
+		fmt.Print("Masukan Pilihan anda: ")
+		fmt.Scan(&option)
+		if option != 1 && option != 0 && option != 2 {
+			fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
+			fmt.Println("Masukkan pilihan anda: ")
+			fmt.Scan(&option)
+		}
+		if option == 1 {
+			key = true
+		} else {
+			key = false
+		}
+	}
+	/* -- SEQUENSIAL SEARCH (POSTING TANGGAPAN/REPLY) -- */
+
+	// fmt.Println(konsul.infoKonsul[0].ntanggapan)
+	// fmt.Println(konsul.infoKonsul[1].ntanggapan)
+	homePasien(patient, konsul)
 
 }
 
@@ -312,9 +407,9 @@ func homedokter(doctor dataDokter, konsul dataKonsul) {
 	if option == 0 {
 		login_dokter(&doctor, &konsul)
 	} else if option == 1 {
-		tampilanKonsul(&patient, &konsul)
+		tampilanKonsul(&patient, &konsul, &doctor)
 	} else if option == 2 {
-		replyKonsultasiPasien()
+		replyKonsultasiPasien(&patient, &konsul, &doctor)
 	}
 
 }
