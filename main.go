@@ -21,18 +21,22 @@ type konsultasi struct {
 	nPertanyaan int
 	tanggapan   [nmax]string
 	ntanggapan  int
+	topik       [nmax]string
+	ntopik      int
 }
 
-// type tag struct {
-// 	konsulID string
-// 	tag      [5]string
-// }
+type topik struct {
+	nKesehatanMental  int
+	nKebugaranJasmani int
+	nPenyakitUmum     int
+}
 
 type dataPasien struct {
 	infoPasien [nmax]pasien
 	n          int
 	nama, pass string
 	tanggapan  string
+	replier    int
 }
 
 type dataDokter struct {
@@ -108,6 +112,7 @@ func signUp(patient *dataPasien, konsul *dataKonsul) {
 
 func menuPasien(patient *dataPasien, konsul *dataKonsul) {
 	var option int
+
 	fmt.Println("*================Welcome==================*")
 	fmt.Println("|    1. Sudah mendaftar sebagai pasien    |")
 	fmt.Println("|    2. Belum terdaftar sebagai pasien    |")
@@ -132,6 +137,27 @@ func menuPasien(patient *dataPasien, konsul *dataKonsul) {
 func login_pasien(patient *dataPasien, konsul *dataKonsul) {
 	var success bool = false
 	var idxPasien int
+	patient.infoPasien[0].nama = "Andito"
+	patient.infoPasien[0].password = "dito"
+	konsul.infoKonsul[0].topik[0] = "Kesehatan Mental"
+	konsul.infoKonsul[0].topik[1] = "Kesehatan Mental"
+	patient.infoPasien[1].nama = "Hilal"
+	patient.infoPasien[1].password = "hilal"
+	konsul.infoKonsul[1].topik[0] = "Kesehatan Mental"
+	konsul.infoKonsul[1].topik[1] = "Penyakit Umum"
+	patient.infoPasien[2].nama = "Andi"
+	patient.infoPasien[2].password = "andi"
+	konsul.infoKonsul[1].topik[0] = "Kesehatan Mental"
+	konsul.infoKonsul[1].topik[1] = "Penyakit Umum"
+	patient.infoPasien[3].nama = "Pragos"
+	patient.infoPasien[3].password = "pragos"
+	konsul.infoKonsul[1].topik[0] = "Kebugaran Jasmani"
+	konsul.infoKonsul[1].topik[1] = "Penyakit Umum"
+	patient.infoPasien[4].nama = "Icha"
+	patient.infoPasien[4].password = "icha"
+	konsul.infoKonsul[1].topik[0] = "Kebugaran Jasmani"
+	konsul.infoKonsul[1].topik[1] = "Penyakit Umum"
+
 	fmt.Println("*==================Login==================*")
 	fmt.Println("|       Input data anda dibawah ini       |")
 	fmt.Println("*=========================================*")
@@ -208,7 +234,17 @@ func searchKonsultasiTag() {
 
 func tampilanKonsul(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter) {
 	var i, j, option int
-
+	var topic topik
+	konsul.infoKonsul[0].topik[0] = "Kesehatan Mental"
+	konsul.infoKonsul[0].topik[1] = "Kesehatan Mental"
+	konsul.infoKonsul[1].topik[0] = "Kesehatan Mental"
+	konsul.infoKonsul[1].topik[1] = "Penyakit Umum"
+	konsul.infoKonsul[2].topik[0] = "Kesehatan Mental"
+	konsul.infoKonsul[2].topik[1] = "Penyakit Umum"
+	konsul.infoKonsul[3].topik[0] = "Kebugaran Jasmani"
+	konsul.infoKonsul[3].topik[1] = "Penyakit Umum"
+	konsul.infoKonsul[4].topik[0] = "Kebugaran Jasmani"
+	konsul.infoKonsul[4].topik[1] = "Penyakit Umum"
 	fmt.Println("*================================================*")
 	fmt.Println("|  Berikut Ini adalah daftar konsultasi pasien:  |")
 	fmt.Println("*================================================*")
@@ -218,7 +254,8 @@ func tampilanKonsul(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter)
 		/* -- PROSES MENAMPILKAN PERTANYAAN -- */
 		fmt.Printf("%v.) Nama Pasien: %v\n", i+1, patient.infoPasien[i].nama)
 		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
-			fmt.Printf("  %v. %v\n", j+1, konsul.infoKonsul[i].pertanyaan[j])
+			fmt.Printf("  %v. Topik : %v\n %v\n", j+1, konsul.infoKonsul[i].topik[j], konsul.infoKonsul[i].pertanyaan[j])
+			hitungTopikFav(&*patient, &*konsul, &*dokter, &topic, i)
 		}
 		fmt.Println("Tanggapan : ")
 		/* -- PROSES MENAMPILKAN TANGGAPAN -- */
@@ -258,8 +295,20 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 	var dokter dataDokter
 	var key bool = true
 	var found bool = false
+	// var topic topik
+	konsul.infoKonsul[0].topik[0] = "Kesehatan Mental"
+	konsul.infoKonsul[0].topik[1] = "Kesehatan Mental"
+	konsul.infoKonsul[1].topik[0] = "Kesehatan Mental"
+	konsul.infoKonsul[1].topik[1] = "Penyakit Umum"
+	konsul.infoKonsul[2].topik[0] = "Kesehatan Mental"
+	konsul.infoKonsul[2].topik[1] = "Penyakit Umum"
+	konsul.infoKonsul[3].topik[0] = "Kebugaran Jasmani"
+	konsul.infoKonsul[3].topik[1] = "Penyakit Umum"
+	konsul.infoKonsul[4].topik[0] = "Kebugaran Jasmani"
+	konsul.infoKonsul[4].topik[1] = "Penyakit Umum"
 
 	fmt.Println("Selamat Datang, Silahkan konsultasi", patient.nama)
+
 	for key {
 		found = false
 		idxPasien = 0
@@ -273,9 +322,28 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 		if !found {
 			konsul.n++
 		}
+		fmt.Println("Pilih Topik Konsultasi :")
+		fmt.Println("1. Penyakit Umum")
+		fmt.Println("2. Kesehatan Mental")
+		fmt.Println("3. Kebugaran Jasmani")
+		fmt.Print("Masukan Pilihan anda: ")
+		fmt.Scan(&option)
+		for option != 1 && option != 2 && option != 3 {
+			fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
+			fmt.Println("Masukkan pilihan anda: ")
+			fmt.Scan(&option)
+		}
+		if option == 1 {
+			konsul.infoKonsul[idxPasien].topik[konsul.infoKonsul[idxPasien].ntopik] = "Penyakit Umum"
+		} else if option == 2 {
+			konsul.infoKonsul[idxPasien].topik[konsul.infoKonsul[idxPasien].ntopik] = "Kesehatan Mental"
+		} else {
+			konsul.infoKonsul[idxPasien].topik[konsul.infoKonsul[idxPasien].ntopik] = "Kebugaran Jasmani"
+		}
 		fmt.Println("*================================================================================*")
 		fmt.Println("|    (!) petunjuk : klik enter lalu ketik 'post' apabila ingin memposting (!)    |")
 		fmt.Println("*================================================================================*")
+		fmt.Printf("Topik : %v\n", konsul.infoKonsul[idxPasien].topik[konsul.infoKonsul[idxPasien].ntopik])
 		fmt.Print("Apa yang ingin anda konsultasikan? ")
 		kalimat = ""
 		kata = ""
@@ -283,6 +351,7 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 			kalimat += kata + " "
 			fmt.Scan(&kata)
 		}
+		konsul.infoKonsul[idxPasien].ntopik++
 		konsul.infoKonsul[idxPasien].pertanyaan[konsul.infoKonsul[idxPasien].nPertanyaan] = kalimat
 		fmt.Println("*================================================================================*")
 		fmt.Println("|             Terima Kasih Atas Konsultasi Anda, Semoga Lekas Sembuh             |")
@@ -310,6 +379,22 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul) {
 	homePasien(&*patient, &*konsul)
 }
 
+func hitungTopikFav(patient *dataPasien, konsul *dataKonsul, doctor *dataDokter, topic *topik, idxPasien int) {
+	fmt.Println(idxPasien)
+	if konsul.infoKonsul[idxPasien].topik[konsul.infoKonsul[idxPasien].ntopik] == "Kesehatan Mental" {
+		topic.nKesehatanMental++
+	} else if konsul.infoKonsul[idxPasien].topik[konsul.infoKonsul[idxPasien].ntopik] == "Kebugaran Jasmani" {
+		topic.nKebugaranJasmani++
+	} else {
+		topic.nPenyakitUmum++
+	}
+
+	fmt.Println(topic.nPenyakitUmum)
+	fmt.Println(topic.nKesehatanMental)
+	fmt.Println(topic.nKebugaranJasmani)
+
+}
+
 func replyKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter) {
 	var idxPasien, i, j, option int
 	var kalimat, kata string
@@ -322,11 +407,23 @@ func replyKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, dokter *data
 
 	/* -- SEQUENSIAL SEARCH (MENAMPILKAN NAMA BESERTA PERTANYAAN) -- */
 	for i = 0; i < patient.n; i++ {
+
+		/* -- PROSES MENAMPILKAN PERTANYAAN -- */
 		fmt.Printf("%v.) Nama Pasien: %v\n", i+1, patient.infoPasien[i].nama)
 		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
 			fmt.Printf("  %v. %v\n", j+1, konsul.infoKonsul[i].pertanyaan[j])
 		}
-		fmt.Println(" Tanggapan :                                       ")
+		fmt.Println("Tanggapan : ")
+		/* -- PROSES MENAMPILKAN TANGGAPAN -- */
+		if konsul.infoKonsul[i].ntanggapan == 0 {
+			fmt.Println("  [BELUM ADA TANGGAPAN]")
+		} else {
+			// fmt.Println(patient.infoPasien[i].nama)
+			for j = 0; j < konsul.infoKonsul[i].ntanggapan; j++ {
+				fmt.Printf("  %v\n", konsul.infoKonsul[i].tanggapan[j])
+			}
+		}
+		// fmt.Println(" Tanggapan :                                       ")
 		fmt.Println("*=================================================*")
 	}
 	/* -- SEQUENSIAL SEARCH (MENAMPILKAN NAMA BESERTA PERTANYAAN) -- */
@@ -452,5 +549,6 @@ func main() {
 	username doctor = jordy
 	pass = jordy */
 	var patient dataPasien
+	patient.n = 5
 	menu(patient)
 }
