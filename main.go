@@ -592,7 +592,7 @@ func homedokter(patient *dataPasien, doctor *dataDokter, konsul *dataKonsul, top
 	if option == 0 {
 		menu(&*patient, konsul, topik)
 	} else if option == 1 {
-		sortingDokter(&*patient, *konsul, &*doctor, &*topik)
+		sortingDokter(*patient, *doctor, &*konsul, &*topik)
 	} else if option == 2 {
 		doctor.reply = true
 		tampilanKonsul(&*patient, &*konsul, &*doctor, &*topik)
@@ -603,7 +603,7 @@ func homedokter(patient *dataPasien, doctor *dataDokter, konsul *dataKonsul, top
 
 }
 
-func sortingDokter(patient *dataPasien, konsul dataKonsul, doctor *dataDokter, topik *dataTopik) {
+func sortingDokter(patient dataPasien, doctor dataDokter, konsul *dataKonsul, topik *dataTopik) {
 	var i, j, n, idx_min int
 	var x int
 	var pil int
@@ -647,8 +647,11 @@ func sortingDokter(patient *dataPasien, konsul dataKonsul, doctor *dataDokter, t
 		fmt.Print("Masukkan pilihan anda: ")
 		fmt.Scan(&pil)
 	}
+	if pil == 0 {
+		homedokter(&patient, &doctor, konsul, &*topik)
+	}
 
-	homedokter(&*patient, &*doctor, &konsul, &*topik)
+	// homedokter(&*patient, &*doctor, &konsul, &*topik)
 
 }
 
