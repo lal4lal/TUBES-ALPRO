@@ -31,6 +31,8 @@ type dataTopik struct {
 	nKandungan       int
 	nSpesialisGigi   int
 	nSPesialisTHT    int
+	ntopik           int
+	topik            string
 }
 
 type dataPasien struct {
@@ -50,7 +52,7 @@ type dataDokter struct {
 type dataKonsul struct {
 	infoKonsul [nmax]konsultasi
 	n          int
-	ntopik     [nmax]int
+	ntopik     [nmax]dataTopik
 	topik      [nmax]string
 }
 
@@ -591,29 +593,36 @@ func homedokter(doctor *dataDokter, konsul *dataKonsul, topik *dataTopik) {
 }
 
 func sortingDokter(patient dataPasien, konsul dataKonsul, doctor dataDokter, topik dataTopik) {
-	var i, j, n int
-	var temp, x int
-	var option int
+	var i, j, n, idx_min int
+	var x int
+	var pil int
+	var t dataTopik
 
 	fmt.Println("*=========================================*")
 	fmt.Println("|       BERIKUT TREND TOPIK PASIEN        |")
 	fmt.Println("*=========================================*")
 
 	i = 1
+
 	for i <= 5 {
+		idx_min = i - 1
 		j = i
-		temp = konsul.ntopik[j]
-		for j > 0 && temp > konsul.ntopik[j-1] {
-			konsul.ntopik[j] = konsul.ntopik[j-1]
-			j--
+		for j < 5 {
+			if konsul.ntopik[idx_min].ntopik < konsul.ntopik[j].ntopik {
+				idx_min = j
+			}
+			j = j + 1
 		}
-		konsul.ntopik[j] = temp
+		t = konsul.ntopik[idx_min]
+
+		konsul.ntopik[idx_min] = konsul.ntopik[i-1]
+		konsul.ntopik[i-1] = t
 		i = i + 1
 	}
 
 	for n < 5 {
 		fmt.Println("")
-		fmt.Printf("%v. Pertanyaan Mengenai %v ditanya sebanyak = %v", x+1, konsul.topik[n], konsul.ntopik[n])
+		fmt.Printf("%v. Pertanyaan Mengenai %v ditanya sebanyak = %v", x+1, konsul.ntopik[n].topik, konsul.ntopik[n].ntopik)
 		fmt.Println("")
 		n++
 		x++
@@ -621,15 +630,15 @@ func sortingDokter(patient dataPasien, konsul dataKonsul, doctor dataDokter, top
 	fmt.Println("")
 
 	fmt.Print("Kembali? (0 untuk kembali) : ")
-	fmt.Scan(&option)
-	for option != 0 {
+	fmt.Scan(&pil)
+	for pil != 0 {
 		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
-		fmt.Println("Masukkan pilihan anda: ")
-		fmt.Scan(&option)
+		fmt.Print("Masukkan pilihan anda: ")
+		fmt.Scan(&pil)
 	}
-	if option == 0 {
-		homedokter(&doctor, &konsul, &topik)
-	}
+
+	homedokter(&doctor, &konsul, &topik)
+
 }
 
 func login_dokter(doctor *dataDokter, konsul *dataKonsul, topik *dataTopik) {
@@ -670,16 +679,16 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	2 = kandungan
 	3 = spesialis gigi
 	4 = spesialis tht */
-	konsul.topik[0] = "Kesehatan Mental"
-	konsul.topik[1] = "Penyakit Umum"
-	konsul.topik[2] = "Kandungan"
-	konsul.topik[3] = "Spesialis Gigi"
-	konsul.topik[4] = "Spesialis THT"
+	konsul.ntopik[0].topik = "Kesehatan Mental"
+	konsul.ntopik[1].topik = "Penyakit Umum"
+	konsul.ntopik[2].topik = "Kandungan"
+	konsul.ntopik[3].topik = "Spesialis Gigi"
+	konsul.ntopik[4].topik = "Spesialis THT"
 
 	patient.infoPasien[0].nama = "Andito"
 	patient.infoPasien[0].password = "dito"
 	konsul.infoKonsul[0].topik[0] = "Kesehatan Mental"
-	konsul.ntopik[0] = 1
+	konsul.ntopik[0].ntopik = 1
 	konsul.infoKonsul[0].pertanyaan[0] = "Akhir Akhir ini saya mengalami gangguan tidur dikarenakan trauma di masalalu."
 	konsul.infoKonsul[0].ntopik = 1
 	konsul.infoKonsul[0].nPertanyaan = 1
@@ -687,7 +696,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[1].nama = "Hilal"
 	patient.infoPasien[1].password = "hilal"
 	konsul.infoKonsul[1].topik[0] = "Penyakit Umum"
-	konsul.ntopik[1] = 1
+	konsul.ntopik[1].ntopik = 1
 	konsul.infoKonsul[1].pertanyaan[0] = "Dokter, saya mengalami demam tinggi, batuk kering, dan kesulitan bernapas, apakah saya mungkin terinfeksi COVID-19?"
 	konsul.infoKonsul[1].ntopik = 1
 	konsul.infoKonsul[1].nPertanyaan = 1
@@ -695,7 +704,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[2].nama = "Andi"
 	patient.infoPasien[2].password = "andi"
 	konsul.infoKonsul[2].topik[0] = "Kesehatan Mental"
-	konsul.ntopik[0] = 2
+	konsul.ntopik[0].ntopik = 2
 	konsul.infoKonsul[2].pertanyaan[0] = "Dokter, saya merasa sangat sulit berkonsentrasi dan seringkali merasa gelisah dan cemas tanpa alasan yang jelas."
 	konsul.infoKonsul[2].ntopik = 1
 	konsul.infoKonsul[2].nPertanyaan = 1
@@ -703,7 +712,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[3].nama = "Ajeng"
 	patient.infoPasien[3].password = "ajeng"
 	konsul.infoKonsul[3].topik[0] = "Kandungan"
-	konsul.ntopik[2] = 1
+	konsul.ntopik[2].ntopik = 1
 	konsul.infoKonsul[3].pertanyaan[0] = "Dokter, saya sedang hamil, kira-kira apa ya dok makanan/minuman yang harus saya hindari?"
 	konsul.infoKonsul[3].ntopik = 1
 	konsul.infoKonsul[3].nPertanyaan = 1
@@ -711,7 +720,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[4].nama = "Icha"
 	patient.infoPasien[4].password = "icha"
 	konsul.infoKonsul[4].topik[0] = "Kandungan"
-	konsul.ntopik[2] = 2
+	konsul.ntopik[2].ntopik = 2
 	konsul.infoKonsul[4].pertanyaan[0] = "Dokter, apakah mengkonsumsi suplemen vitamin tertentu aman bagi kandungan saya, mengingat saya sedang dalam masa kehamilan."
 	konsul.infoKonsul[4].ntopik = 1
 	konsul.infoKonsul[4].nPertanyaan = 1
@@ -719,7 +728,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[5].nama = "Asep"
 	patient.infoPasien[5].password = "asep"
 	konsul.infoKonsul[5].topik[0] = "Spesialis Gigi"
-	konsul.ntopik[3] = 1
+	konsul.ntopik[3].ntopik = 1
 	konsul.topik[4] = "Spesialis THT"
 	konsul.infoKonsul[5].pertanyaan[0] = "Dokter, gigi belakang saya terasa sakit dan terkadang berdarah saat mengunyah, apakah ada masalah yang perlu diperiksa?"
 	konsul.infoKonsul[5].ntopik = 1
@@ -728,7 +737,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[6].nama = "Agung"
 	patient.infoPasien[6].password = "agung"
 	konsul.infoKonsul[6].topik[0] = "Spesialis Gigi"
-	konsul.ntopik[3] = 2
+	konsul.ntopik[3].ntopik = 2
 	konsul.infoKonsul[6].pertanyaan[0] = "Dokter, gigi depan saya ada perubahan warna yang sensitif, apakah ada perawatan yang dapat membantu memperbaikinya?"
 	konsul.infoKonsul[6].ntopik = 1
 	konsul.infoKonsul[6].nPertanyaan = 1
@@ -736,7 +745,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[7].nama = "Joni"
 	patient.infoPasien[7].password = "joni"
 	konsul.infoKonsul[7].topik[0] = "Spesialis THT"
-	konsul.ntopik[4] = 1
+	konsul.ntopik[4].ntopik = 1
 	konsul.infoKonsul[7].pertanyaan[0] = "Dokter, saya sering mengalami hidung tersumbat, pilek, dan batuk pada malam hari, apakah ada kaitannya dengan THT?"
 	konsul.infoKonsul[7].ntopik = 1
 	konsul.infoKonsul[7].nPertanyaan = 1
@@ -744,7 +753,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[8].nama = "Doni"
 	patient.infoPasien[8].password = "doni"
 	konsul.infoKonsul[8].topik[0] = "Spesialis THT"
-	konsul.ntopik[4] = 2
+	konsul.ntopik[4].ntopik = 2
 	konsul.infoKonsul[8].pertanyaan[0] = "Dokter, saya mengalami tinnitus atau denging di telinga yang konstan, apakah ada pengobatan yang efektif untuk kondisi ini?"
 	konsul.infoKonsul[8].ntopik = 1
 	konsul.infoKonsul[8].nPertanyaan = 1
@@ -752,7 +761,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[9].nama = "Restu"
 	patient.infoPasien[9].password = "restu"
 	konsul.infoKonsul[9].topik[0] = "Spesialis THT"
-	konsul.ntopik[4] = 3
+	konsul.ntopik[4].ntopik = 3
 	konsul.infoKonsul[9].pertanyaan[0] = "Dokter, saya mengalami kehilangan pendengaran diwaktu waktu tertentu, apakah ini perlu ditangani secepatnya di bagian THT?"
 	konsul.infoKonsul[9].ntopik = 1
 	konsul.infoKonsul[9].nPertanyaan = 1
