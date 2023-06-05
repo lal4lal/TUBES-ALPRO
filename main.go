@@ -38,17 +38,20 @@ type dataPasien struct {
 	n          int
 	nama, pass string
 	tanggapan  string
-	replier    int
+	guest      bool
 }
 
 type dataDokter struct {
 	infoDokter [nmax]dokter
 	n          int
 	nama, pass string
+	reply      bool
 }
 type dataKonsul struct {
 	infoKonsul [nmax]konsultasi
 	n          int
+	ntopik     [nmax]int
+	topik      [nmax]string
 }
 
 func menu(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
@@ -71,7 +74,7 @@ func menu(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	if option == 1 {
 		menuPasien(&*patient, &*konsul, &*topik)
 	} else if option == 2 {
-		login_dokter(&doctor, &*konsul)
+		login_dokter(&doctor, &*konsul, &*topik)
 	} else if option == 3 {
 		menuguest(&*patient, &*konsul, &*topik)
 	} else {
@@ -84,7 +87,7 @@ func menuguest(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	fmt.Println("*================Welcome==================*")
 	fmt.Println("|      1. Lihat Konsultasi Pasien         |")
 	fmt.Println("|      2. Cari Konsultasi Pasien          |")
-	fmt.Println("|      0. Kembali ke menu                 |")
+	fmt.Println("|      0. Ganti Role                      |")
 	fmt.Println("*=========================================*")
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
@@ -94,8 +97,9 @@ func menuguest(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 		fmt.Scan(&option)
 	}
 	if option == 0 {
-		menuPasien(&*patient, &*konsul, &*topik)
+		menu(&*patient, &*konsul, &*topik)
 	} else if option == 1 {
+		patient.guest = true
 		tampilanKonsul(&*patient, &*konsul, &dokter, &*topik)
 	} else if option == 2 {
 		searchKonsultasiTag(patient, konsul, topik)
@@ -189,15 +193,16 @@ func homePasien(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	fmt.Println("")
 	for idxPasien = 0; idxPasien <= patient.n; idxPasien++ {
 		if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
+			fmt.Println("")
 			fmt.Println("Selamat Datang", patient.infoPasien[idxPasien].nama)
 		}
 	}
-	fmt.Println("*================================*")
-	fmt.Println("|   1. Konsultasi pada dokter!   |")
-	fmt.Println("|   2. Tanggapi Konsultasi       |")
-	fmt.Println("|   3. Kunjungi Forum            |")
-	fmt.Println("|   0. Keluar dari Akun          |")
-	fmt.Println("*================================*")
+	fmt.Println("*=========================================*")
+	fmt.Println("|        1. Konsultasi pada dokter!       |")
+	fmt.Println("|        2. Tanggapi Konsultasi           |")
+	fmt.Println("|        3. Kunjungi Forum                |")
+	fmt.Println("|        0. Keluar dari Akun              |")
+	fmt.Println("*=========================================*")
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
 	for option != 1 && option != 0 && option != 2 && option != 3 {
@@ -221,12 +226,12 @@ func searchKonsultasiTag(patient *dataPasien, konsul *dataKonsul, topik *dataTop
 	var option int
 	var i, j, n int
 
-	fmt.Println("*========================================================*")
-	fmt.Println("|   Pilih topik yang ada ingin cari :                    |")
-	fmt.Println("|   1. Penyakit Umum            4. Spesialis Gigi        |")
-	fmt.Println("|   2. Kesehatan Mental         5. Spesialis THT         |")
-	fmt.Println("|   3. Kandungan                0. Kembali               |")
-	fmt.Println("*========================================================*")
+	fmt.Println("*=========================================*")
+	fmt.Println("|  Pilih topik yang ada ingin cari :      |")
+	fmt.Println("|  1. Penyakit Umum     4. Spesialis Gigi |")
+	fmt.Println("|  2. Kesehatan Mental  5. Spesialis THT  |")
+	fmt.Println("|  3. Kandungan         0. Kembali        |")
+	fmt.Println("*=========================================*")
 	fmt.Print("Masukan Pilihan anda: ")
 	fmt.Scan(&option)
 	for option != 1 && option != 0 && option != 2 && option != 3 && option != 4 && option != 5 {
@@ -338,37 +343,51 @@ func tampilanKonsul(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter,
 	fmt.Printf("*================================================================*\n\n")
 	for i = 0; i < patient.n; i++ {
 		/* -- PROSES MENAMPILKAN PERTANYAAN -- */
-		fmt.Printf("	Dari Pasien: %v\n", patient.infoPasien[i].nama)
+		fmt.Printf("%v. Dari Pasien: %v\n", i+1, patient.infoPasien[i].nama)
 		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
-			fmt.Printf("	Topik : %v\n", konsul.infoKonsul[i].topik[j])
-			fmt.Printf("	%v\n", konsul.infoKonsul[i].pertanyaan[j])
+			fmt.Printf("   Topik : %v\n", konsul.infoKonsul[i].topik[j])
+			fmt.Printf("   %v\n", konsul.infoKonsul[i].pertanyaan[j])
 		}
-		fmt.Println("	Tanggapan : ")
+		fmt.Println("   Tanggapan : ")
 		/* -- PROSES MENAMPILKAN TANGGAPAN -- */
 		if konsul.infoKonsul[i].ntanggapan == 0 {
-			fmt.Printf("	[BELUM ADA TANGGAPAN]\n\n")
+			fmt.Printf("   [BELUM ADA TANGGAPAN]\n\n")
 		} else {
 			for j = 0; j < konsul.infoKonsul[i].ntanggapan; j++ {
 				fmt.Printf("	%v\n\n", konsul.infoKonsul[i].tanggapan[j])
 			}
 		}
 	}
-	fmt.Println("*================================================*")
-	fmt.Println("|           1. Kembali ke menu pasien            |")
-	fmt.Println("|           0. Keluar akun                       |")
-	fmt.Println("*================================================*")
-	fmt.Print("Masukan Pilihan anda: ")
-	fmt.Scan(&option)
-	if option != 1 && option != 0 {
-		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
-		fmt.Println("Masukkan pilihan anda: ")
+	if patient.guest == true {
+		fmt.Print("[Pada mode tamu, anda hanya bisa melihat pertanyaan.] Kembali? (0 untuk kembali) : ")
 		fmt.Scan(&option)
-	}
-	if option == 1 {
-		homePasien(patient, konsul, topik)
+		for option != 0 {
+			fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
+			fmt.Println("Masukkan pilihan anda: ")
+			fmt.Scan(&option)
+		}
+		if option == 0 {
+			menuguest(patient, konsul, topik)
+		}
 	} else {
-		menuPasien(patient, konsul, topik)
+		fmt.Println("*================================================*")
+		fmt.Println("|           1. Kembali ke menu pasien            |")
+		fmt.Println("|           0. Keluar akun                       |")
+		fmt.Println("*================================================*")
+		fmt.Print("Masukan Pilihan anda: ")
+		fmt.Scan(&option)
+		if option != 1 && option != 0 {
+			fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
+			fmt.Println("Masukkan pilihan anda: ")
+			fmt.Scan(&option)
+		}
+		if option == 1 {
+			homePasien(patient, konsul, topik)
+		} else {
+			menuPasien(patient, konsul, topik)
+		}
 	}
+
 }
 
 func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
@@ -391,15 +410,15 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul, topik *dataT
 		if !found {
 			konsul.n++
 		}
-		fmt.Println("*=======================================*")
-		fmt.Println("|          Pilih Topik Konsultasi       |")
-		fmt.Println("*=======================================*")
-		fmt.Println("|           1. Penyakit Umum            |")
-		fmt.Println("|           2. Kesehatan Mental         |")
-		fmt.Println("|           3. Kandungan                |")
-		fmt.Println("|           4. Spesialis Gigi           |")
-		fmt.Println("|           5. Spesialis THT            |")
-		fmt.Println("*=======================================*")
+		fmt.Println("*=========================================*")
+		fmt.Println("|          Pilih Topik Konsultasi         |")
+		fmt.Println("*=========================================*")
+		fmt.Println("|           1. Penyakit Umum              |")
+		fmt.Println("|           2. Kesehatan Mental           |")
+		fmt.Println("|           3. Kandungan                  |")
+		fmt.Println("|           4. Spesialis Gigi             |")
+		fmt.Println("|           5. Spesialis THT              |")
+		fmt.Println("*=========================================*")
 		fmt.Print("Masukan Pilihan anda: ")
 		fmt.Scan(&option)
 		for option != 1 && option != 2 && option != 3 && option != 4 && option != 5 {
@@ -471,24 +490,21 @@ func replyKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, dokter *data
 
 	/* -- SEQUENSIAL SEARCH (MENAMPILKAN NAMA BESERTA PERTANYAAN) -- */
 	for i = 0; i < patient.n; i++ {
-
 		/* -- PROSES MENAMPILKAN PERTANYAAN -- */
-		fmt.Printf("%v.) Nama Pasien: %v\n", i+1, patient.infoPasien[i].nama)
+		fmt.Printf("%v. Dari Pasien: %v\n", i+1, patient.infoPasien[i].nama)
 		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
-			fmt.Printf("  %v. %v\n", j+1, konsul.infoKonsul[i].pertanyaan[j])
+			fmt.Printf("   Topik : %v\n", konsul.infoKonsul[i].topik[j])
+			fmt.Printf("   %v\n", konsul.infoKonsul[i].pertanyaan[j])
 		}
-		fmt.Println("Tanggapan : ")
+		fmt.Println("   Tanggapan : ")
 		/* -- PROSES MENAMPILKAN TANGGAPAN -- */
 		if konsul.infoKonsul[i].ntanggapan == 0 {
-			fmt.Println("[BELUM ADA TANGGAPAN]")
+			fmt.Printf("   [BELUM ADA TANGGAPAN]\n\n")
 		} else {
-			// fmt.Println(patient.infoPasien[i].nama)
 			for j = 0; j < konsul.infoKonsul[i].ntanggapan; j++ {
-				fmt.Printf("  %v\n", konsul.infoKonsul[i].tanggapan[j])
+				fmt.Printf("	%v\n\n", konsul.infoKonsul[i].tanggapan[j])
 			}
 		}
-		// fmt.Println(" Tanggapan :                                       ")
-		fmt.Println("*=================================================*")
 	}
 	/* -- SEQUENSIAL SEARCH (MENAMPILKAN NAMA BESERTA PERTANYAAN) -- */
 
@@ -543,35 +559,80 @@ func replyKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, dokter *data
 	homePasien(patient, konsul, topik)
 }
 
-func homedokter(doctor dataDokter, konsul dataKonsul) {
-	var topik dataTopik
+func homedokter(doctor *dataDokter, konsul *dataKonsul, topik *dataTopik) {
 	var option int
 	var patient dataPasien
 	fmt.Println("")
 	fmt.Println("Selamat Datang Dr.", doctor.infoDokter[0].nama)
-	fmt.Println("-----------------------------------")
-	fmt.Println(" 1. Tampilakan topik ")
-	fmt.Println(" 2. Tanggapi Konsultasi     ")
-	fmt.Println(" 0. Keluar dari mode dokter        ")
+	fmt.Println("*=========================================*")
+	fmt.Println("|        1. Tampilkan Trend Topik         |")
+	fmt.Println("|        2. Kunjungi Forum                |")
+	fmt.Println("|        3. Tanggapi Konsultasi           |")
+	fmt.Println("|        0. Keluar dari Akun              |")
+	fmt.Println("*=========================================*")
 	fmt.Print("Masukkan pilihan anda: ")
 	fmt.Scan(&option)
-	for option != 1 && option != 0 && option != 2 {
+	for option != 1 && option != 0 && option != 2 && option != 3 {
 		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
 		fmt.Println("Masukkan pilihan anda: ")
 		fmt.Scan(&option)
 	}
-
 	if option == 0 {
-		login_dokter(&doctor, &konsul)
+		login_dokter(&*doctor, &*konsul, topik)
 	} else if option == 1 {
-		tampilanKonsul(&patient, &konsul, &doctor, &topik)
+		sortingDokter(patient, *konsul, *doctor, *topik)
 	} else if option == 2 {
-		replyKonsultasiPasien(&patient, &konsul, &doctor, &topik)
+		tampilanKonsul(&patient, &*konsul, &*doctor, &*topik)
+	} else if option == 3 {
+		doctor.reply = true
+		replyKonsultasiPasien(&patient, &*konsul, &*doctor, &*topik)
 	}
 
 }
 
-func login_dokter(doctor *dataDokter, konsul *dataKonsul) {
+func sortingDokter(patient dataPasien, konsul dataKonsul, doctor dataDokter, topik dataTopik) {
+	var i, j, n int
+	var temp, x int
+	var option int
+
+	fmt.Println("*=========================================*")
+	fmt.Println("|       BERIKUT TREND TOPIK PASIEN        |")
+	fmt.Println("*=========================================*")
+
+	i = 1
+	for i <= 5 {
+		j = i
+		temp = konsul.ntopik[j]
+		for j > 0 && temp > konsul.ntopik[j-1] {
+			konsul.ntopik[j] = konsul.ntopik[j-1]
+			j--
+		}
+		konsul.ntopik[j] = temp
+		i = i + 1
+	}
+
+	for n < 5 {
+		fmt.Println("")
+		fmt.Printf("%v. Pertanyaan Mengenai %v ditanya sebanyak = %v", x+1, konsul.topik[n], konsul.ntopik[n])
+		fmt.Println("")
+		n++
+		x++
+	}
+	fmt.Println("")
+
+	fmt.Print("Kembali? (0 untuk kembali) : ")
+	fmt.Scan(&option)
+	for option != 0 {
+		fmt.Println("Pilihan yang anda masukkan salah, Silahkan masukkan pilihan anda kembali")
+		fmt.Println("Masukkan pilihan anda: ")
+		fmt.Scan(&option)
+	}
+	if option == 0 {
+		homedokter(&doctor, &konsul, &topik)
+	}
+}
+
+func login_dokter(doctor *dataDokter, konsul *dataKonsul, topik *dataTopik) {
 	doctor.infoDokter[0].nama = "jordy"
 	doctor.infoDokter[0].password = "jordy"
 	var success bool
@@ -600,13 +661,25 @@ func login_dokter(doctor *dataDokter, konsul *dataKonsul) {
 			fmt.Scan(&doctor.pass)
 		}
 	}
-	homedokter(*doctor, *konsul)
+	homedokter(&*doctor, &*konsul, &*topik)
 }
 
 func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
+	/* 0 = kesehatan mental
+	1 = penyakit umum
+	2 = kandungan
+	3 = spesialis gigi
+	4 = spesialis tht */
+	konsul.topik[0] = "Kesehatan Mental"
+	konsul.topik[1] = "Penyakit Umum"
+	konsul.topik[2] = "Kandungan"
+	konsul.topik[3] = "Spesialis Gigi"
+	konsul.topik[4] = "Spesialis THT"
+
 	patient.infoPasien[0].nama = "Andito"
 	patient.infoPasien[0].password = "dito"
 	konsul.infoKonsul[0].topik[0] = "Kesehatan Mental"
+	konsul.ntopik[0] = 1
 	konsul.infoKonsul[0].pertanyaan[0] = "Akhir Akhir ini saya mengalami gangguan tidur dikarenakan trauma di masalalu."
 	konsul.infoKonsul[0].ntopik = 1
 	konsul.infoKonsul[0].nPertanyaan = 1
@@ -614,6 +687,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[1].nama = "Hilal"
 	patient.infoPasien[1].password = "hilal"
 	konsul.infoKonsul[1].topik[0] = "Penyakit Umum"
+	konsul.ntopik[1] = 1
 	konsul.infoKonsul[1].pertanyaan[0] = "Dokter, saya mengalami demam tinggi, batuk kering, dan kesulitan bernapas, apakah saya mungkin terinfeksi COVID-19?"
 	konsul.infoKonsul[1].ntopik = 1
 	konsul.infoKonsul[1].nPertanyaan = 1
@@ -621,6 +695,7 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[2].nama = "Andi"
 	patient.infoPasien[2].password = "andi"
 	konsul.infoKonsul[2].topik[0] = "Kesehatan Mental"
+	konsul.ntopik[0] = 2
 	konsul.infoKonsul[2].pertanyaan[0] = "Dokter, saya merasa sangat sulit berkonsentrasi dan seringkali merasa gelisah dan cemas tanpa alasan yang jelas."
 	konsul.infoKonsul[2].ntopik = 1
 	konsul.infoKonsul[2].nPertanyaan = 1
@@ -628,20 +703,24 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[3].nama = "Ajeng"
 	patient.infoPasien[3].password = "ajeng"
 	konsul.infoKonsul[3].topik[0] = "Kandungan"
-	konsul.infoKonsul[3].pertanyaan[0] = "Dokter, saya sedang hamil dan ingin mengetahui apakah ada makanan atau minuman tertentu yang harus saya hindari karena berpotensi membahayakan kandungan saya?"
+	konsul.ntopik[2] = 1
+	konsul.infoKonsul[3].pertanyaan[0] = "Dokter, saya sedang hamil, kira-kira apa ya dok makanan/minuman yang harus saya hindari?"
 	konsul.infoKonsul[3].ntopik = 1
 	konsul.infoKonsul[3].nPertanyaan = 1
 
 	patient.infoPasien[4].nama = "Icha"
 	patient.infoPasien[4].password = "icha"
 	konsul.infoKonsul[4].topik[0] = "Kandungan"
-	konsul.infoKonsul[4].pertanyaan[0] = "Dokter, saya ingin mengetahui apakah konsumsi suplemen vitamin tertentu aman bagi kandungan saya, mengingat saya sedang dalam masa kehamilan."
+	konsul.ntopik[2] = 2
+	konsul.infoKonsul[4].pertanyaan[0] = "Dokter, apakah mengkonsumsi suplemen vitamin tertentu aman bagi kandungan saya, mengingat saya sedang dalam masa kehamilan."
 	konsul.infoKonsul[4].ntopik = 1
 	konsul.infoKonsul[4].nPertanyaan = 1
 
 	patient.infoPasien[5].nama = "Asep"
 	patient.infoPasien[5].password = "asep"
 	konsul.infoKonsul[5].topik[0] = "Spesialis Gigi"
+	konsul.ntopik[3] = 1
+	konsul.topik[4] = "Spesialis THT"
 	konsul.infoKonsul[5].pertanyaan[0] = "Dokter, gigi belakang saya terasa sakit dan terkadang berdarah saat mengunyah, apakah ada masalah yang perlu diperiksa?"
 	konsul.infoKonsul[5].ntopik = 1
 	konsul.infoKonsul[5].nPertanyaan = 1
@@ -649,20 +728,23 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[6].nama = "Agung"
 	patient.infoPasien[6].password = "agung"
 	konsul.infoKonsul[6].topik[0] = "Spesialis Gigi"
-	konsul.infoKonsul[6].pertanyaan[0] = "Dokter, gigi depan saya mengalami perubahan warna dan terlihat lebih sensitif, apakah ada perawatan yang dapat membantu memperbaikinya?"
+	konsul.ntopik[3] = 2
+	konsul.infoKonsul[6].pertanyaan[0] = "Dokter, gigi depan saya ada perubahan warna yang sensitif, apakah ada perawatan yang dapat membantu memperbaikinya?"
 	konsul.infoKonsul[6].ntopik = 1
 	konsul.infoKonsul[6].nPertanyaan = 1
 
 	patient.infoPasien[7].nama = "Joni"
 	patient.infoPasien[7].password = "joni"
 	konsul.infoKonsul[7].topik[0] = "Spesialis THT"
-	konsul.infoKonsul[7].pertanyaan[0] = "Dokter, saya sering mengalami hidung tersumbat, pilek, dan batuk pada malam hari, apakah ada masalah dengan saluran pernapasan THT saya?"
+	konsul.ntopik[4] = 1
+	konsul.infoKonsul[7].pertanyaan[0] = "Dokter, saya sering mengalami hidung tersumbat, pilek, dan batuk pada malam hari, apakah ada kaitannya dengan THT?"
 	konsul.infoKonsul[7].ntopik = 1
 	konsul.infoKonsul[7].nPertanyaan = 1
 
 	patient.infoPasien[8].nama = "Doni"
 	patient.infoPasien[8].password = "doni"
 	konsul.infoKonsul[8].topik[0] = "Spesialis THT"
+	konsul.ntopik[4] = 2
 	konsul.infoKonsul[8].pertanyaan[0] = "Dokter, saya mengalami tinnitus atau denging di telinga yang konstan, apakah ada pengobatan yang efektif untuk kondisi ini?"
 	konsul.infoKonsul[8].ntopik = 1
 	konsul.infoKonsul[8].nPertanyaan = 1
@@ -670,7 +752,8 @@ func dataset(patient *dataPasien, konsul *dataKonsul, topik *dataTopik) {
 	patient.infoPasien[9].nama = "Restu"
 	patient.infoPasien[9].password = "restu"
 	konsul.infoKonsul[9].topik[0] = "Spesialis THT"
-	konsul.infoKonsul[9].pertanyaan[0] = "Dokter, saya mengalami infeksi telinga yang berulang-ulang, apakah ada langkah pencegahan yang dapat saya lakukan untuk mengurangi risiko infeksi THT?"
+	konsul.ntopik[4] = 3
+	konsul.infoKonsul[9].pertanyaan[0] = "Dokter, saya mengalami kehilangan pendengaran diwaktu waktu tertentu, apakah ini perlu ditangani secepatnya di bagian THT?"
 	konsul.infoKonsul[9].ntopik = 1
 	konsul.infoKonsul[9].nPertanyaan = 1
 
