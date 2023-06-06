@@ -363,9 +363,9 @@ func searchKonsultasiTag(patient *dataPasien, konsul *dataKonsul, dokter *dataDo
 			menuguest(patient, konsul, dokter, topik)
 		}
 	} else {
-		fmt.Println("*===========================*")
-		fmt.Println("|         0. Kembali        |")
-		fmt.Println("*===========================*")
+		fmt.Println("*=========================================*")
+		fmt.Println("|              0. Kembali                 |")
+		fmt.Println("*=========================================*")
 		fmt.Print("Masukkan Pilihan Anda: ")
 		fmt.Scan(&option)
 		for option != 0 {
@@ -439,10 +439,10 @@ func tampilanKonsul(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter,
 			homedokter(patient, konsul, dokter, topik)
 		}
 	} else {
-		fmt.Println("*================================================*")
-		fmt.Println("|           1. Kembali ke menu pasien            |")
-		fmt.Println("|           0. Keluar akun                       |")
-		fmt.Println("*================================================*")
+		fmt.Println("*=========================================*")
+		fmt.Println("|       1. Kembali ke menu pasien         |")
+		fmt.Println("|       0. Keluar akun                    |")
+		fmt.Println("*=========================================*")
 		fmt.Print("Masukan Pilihan anda: ")
 		fmt.Scan(&option)
 		if option != 1 && option != 0 {
@@ -603,9 +603,10 @@ func replyKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, dokter *data
 			konsul.n++
 		}
 		//proses memasukkan teks tanggapan untuk konsul pasien
-		fmt.Println("*================================================================================*")
-		fmt.Println("|    (!) petunjuk : klik enter lalu ketik 'post' apabila ingin memposting (!)    |")
-		fmt.Println("*================================================================================*")
+		fmt.Println("*=========================================*")
+		fmt.Println("|           (!) petunjuk  (!)             |")
+		fmt.Println("|    Ketik 'post' + enter untuk posting   |")
+		fmt.Println("*=========================================*")
 		fmt.Print("Apa yang ingin anda Tanggapi? ")
 		kalimat = ""
 		kata = ""
@@ -636,12 +637,12 @@ func replyKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, dokter *data
 			}
 		} else {
 			konsul.infoKonsul[idxPasien].ntanggapan++
-			fmt.Println("*=======================================================*")
-			fmt.Println("|           Terima Kasih Atas Tanggapan Anda            |")
-			fmt.Println("*=======================================================*")
-			fmt.Println("|           1. Posting tanggapan lain                   |")
-			fmt.Println("|           0. kembali                                  |")
-			fmt.Println("*=======================================================*")
+			fmt.Println("*=========================================*")
+			fmt.Println("|    Terima Kasih Atas Tanggapan Anda     |")
+			fmt.Println("*=========================================*")
+			fmt.Println("|        1. Posting tanggapan lain        |")
+			fmt.Println("|        0. kembali                       |")
+			fmt.Println("*=========================================*")
 			fmt.Print("Masukan Pilihan anda: ")
 			fmt.Scan(&option)
 			if option != 1 && option != 0 {
