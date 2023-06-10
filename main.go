@@ -616,7 +616,7 @@ func replyKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, dokter *data
 		}
 		//mengecek apakah yang memberi tanggapan dokter, jika bukan berarti pasien yang memberi tanggapan
 		if dokter.reply {
-			kalimat = "Dari Dr. Jordy :" + kalimat
+			kalimat = "Dari Dr. Nurul :" + kalimat
 		} else {
 			kalimat = "Dari " + patient.nama + ":" + kalimat
 		}
