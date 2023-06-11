@@ -50,6 +50,27 @@ type dataKonsul struct {
 	topik      [nmax]string
 }
 
+func seacrhidxPasien(patient *dataPasien, searchNama string) int {
+	//menghasilkan index pasien jika nama pasien searchNama ditemukan dan me return -1 jika tidak ditemukan
+
+	var idx int = 0
+	var found bool = false
+
+	for idx < patient.n && !found {
+		if searchNama == patient.infoPasien[idx].nama {
+			found = true
+			idx--
+		}
+		idx++
+	}
+
+	if idx == patient.n {
+		return -1
+	} else {
+		return idx
+	}
+}
+
 func menu(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter, topik *dataTopik) {
 	/*
 		I.S Terdefinisi data patient, konsul, dokter, dan topik
@@ -210,12 +231,8 @@ func homePasien(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter, top
 
 	fmt.Println("")
 	//Searching index Pasien yang sedang login saat ini
-	for idxPasien = 0; idxPasien <= patient.n; idxPasien++ {
-		if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
-			fmt.Println("")
-			fmt.Println("Selamat Datang", patient.infoPasien[idxPasien].nama)
-		}
-	}
+	idxPasien = seacrhidxPasien(patient, patient.nama)
+	fmt.Printf("Selamat Datang Pasien %v\n", patient.infoPasien[idxPasien].nama)
 	//tampilan home Pasien
 	fmt.Println("*=========================================*")
 	fmt.Println("|        1. Konsultasi pada dokter!       |")
@@ -397,18 +414,20 @@ func tampilanKonsul(patient *dataPasien, konsul *dataKonsul, dokter *dataDokter,
 	fmt.Printf("*=========================================*\n\n")
 	for i = 0; i < patient.n; i++ {
 		//PROSES MENAMPILKAN PERTANYAAN
-		fmt.Printf("%v. Dari Pasien: %v\n", i+1, patient.infoPasien[i].nama)
-		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
-			fmt.Printf("   Topik : %v\n", konsul.infoKonsul[i].topik[j])
-			fmt.Printf("  %v\n", konsul.infoKonsul[i].pertanyaan[j])
-		}
-		fmt.Println("   Tanggapan : ")
-		//PROSES MENAMPILKAN TANGGAPAN
-		if konsul.infoKonsul[i].ntanggapan == 0 {
-			fmt.Printf("   [BELUM ADA TANGGAPAN]\n\n")
-		} else {
-			for j = 0; j < konsul.infoKonsul[i].ntanggapan; j++ {
-				fmt.Printf("	%v\n\n", konsul.infoKonsul[i].tanggapan[j])
+		if konsul.infoKonsul[i].nPertanyaan != 0 {
+			fmt.Printf("%v. Dari Pasien: %v\n", i+1, patient.infoPasien[i].nama)
+			for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
+				fmt.Printf("   Topik : %v\n", konsul.infoKonsul[i].topik[j])
+				fmt.Printf("  %v\n", konsul.infoKonsul[i].pertanyaan[j])
+			}
+			fmt.Println("   Tanggapan : ")
+			//PROSES MENAMPILKAN TANGGAPAN
+			if konsul.infoKonsul[i].ntanggapan == 0 {
+				fmt.Printf("   [BELUM ADA TANGGAPAN]\n\n")
+			} else {
+				for j = 0; j < konsul.infoKonsul[i].ntanggapan; j++ {
+					fmt.Printf("	%v\n\n", konsul.infoKonsul[i].tanggapan[j])
+				}
 			}
 		}
 	}
@@ -466,22 +485,14 @@ func postKonsul_fromPasien(patient *dataPasien, konsul *dataKonsul, dokter *data
 	var kalimat, kata string
 	var option, idxPasien int
 	var key bool = true
-	var found bool = false
 	fmt.Println("Selamat Datang, Silahkan konsultasi", patient.nama)
 
 	for key {
 		//mengecek apakah pasien yang saat ini sedang login sudah pernah membuat konsultasi
-		found = false
-		idxPasien = 0
-		for idxPasien < patient.n && !found {
-			if patient.infoPasien[idxPasien].nama == patient.nama && patient.infoPasien[idxPasien].password == patient.pass {
-				found = true
-				idxPasien--
-			}
-			idxPasien++
-		}
-		if !found {
+		idxPasien = seacrhidxPasien(patient, patient.nama)
+		if idxPasien == -1 {
 			konsul.n++
+			idxPasien = konsul.n
 		}
 		//pemilihan topik/ tag yang akan dikonsultasikan pasien
 		fmt.Println("*=========================================*")
@@ -570,18 +581,20 @@ func replyKonsultasiPasien(patient *dataPasien, konsul *dataKonsul, dokter *data
 	//SEQUENSIAL SEARCH (MENAMPILKAN NAMA BESERTA PERTANYAAN)
 	for i = 0; i < patient.n; i++ {
 		//PROSES MENAMPILKAN PERTANYAAN
-		fmt.Printf("%v. Dari Pasien: %v\n", i+1, patient.infoPasien[i].nama)
-		for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
-			fmt.Printf("   Topik : %v\n", konsul.infoKonsul[i].topik[j])
-			fmt.Printf("  %v\n", konsul.infoKonsul[i].pertanyaan[j])
-		}
-		fmt.Println("   Tanggapan : ")
-		//PROSES MENAMPILKAN TANGGAPAN
-		if konsul.infoKonsul[i].ntanggapan == 0 {
-			fmt.Printf("   [BELUM ADA TANGGAPAN]\n\n")
-		} else {
-			for j = 0; j < konsul.infoKonsul[i].ntanggapan; j++ {
-				fmt.Printf("   %v\n\n", konsul.infoKonsul[i].tanggapan[j])
+		if konsul.infoKonsul[i].nPertanyaan != 0 {
+			fmt.Printf("%v. Dari Pasien: %v\n", i+1, patient.infoPasien[i].nama)
+			for j = 0; j < konsul.infoKonsul[i].nPertanyaan; j++ {
+				fmt.Printf("   Topik : %v\n", konsul.infoKonsul[i].topik[j])
+				fmt.Printf("  %v\n", konsul.infoKonsul[i].pertanyaan[j])
+			}
+			fmt.Println("   Tanggapan : ")
+			//PROSES MENAMPILKAN TANGGAPAN
+			if konsul.infoKonsul[i].ntanggapan == 0 {
+				fmt.Printf("   [BELUM ADA TANGGAPAN]\n\n")
+			} else {
+				for j = 0; j < konsul.infoKonsul[i].ntanggapan; j++ {
+					fmt.Printf("   %v\n\n", konsul.infoKonsul[i].tanggapan[j])
+				}
 			}
 		}
 	}
