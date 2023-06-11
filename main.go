@@ -51,7 +51,7 @@ type dataKonsul struct {
 }
 
 func seacrhidxPasien(patient *dataPasien, searchNama string) int {
-	//menghasilkan index pasien jika nama pasien searchNama ditemukan dan me return -1 jika tidak ditemukan
+	//menghasilkan index pasien jika nama pasien searchNama ditemukan didalam array dataPasien dan menghasilkan -1 jika tidak ditemukan
 
 	var idx int = 0
 	var found bool = false
